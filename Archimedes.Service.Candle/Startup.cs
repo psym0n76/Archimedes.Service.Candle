@@ -33,13 +33,15 @@ namespace Archimedes.Service.Candle
 
             var config = Configuration.GetSection("AppSettings").Get<Config>();
 
+            var hangfireConnection =
+                config.HangfireDatabaseName.BuildTestHangfireConnection(config.HangfireDatabaseName,
+                    config.DatabaseServer);
+
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(
-                    config.HangfireDatabaseName.GetHangfireConnectionString(config.HangfireDatabaseName,
-                        config.DatabaseServer), new SqlServerStorageOptions
+                .UseSqlServerStorage(hangfireConnection, new SqlServerStorageOptions
                 {
                     CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
                     SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),

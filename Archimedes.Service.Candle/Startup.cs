@@ -33,6 +33,8 @@ namespace Archimedes.Service.Candle
 
             var config = Configuration.GetSection("AppSettings").Get<Config>();
 
+            config.DatabaseServer.SetInternetInformationServicesPermissions();
+
             var hangfireConnection =
                 config.HangfireDatabaseName.BuildTestHangfireConnection(config.HangfireDatabaseName,
                     config.DatabaseServer);

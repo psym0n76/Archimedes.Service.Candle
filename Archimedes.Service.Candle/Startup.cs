@@ -15,7 +15,7 @@ namespace Archimedes.Service.Candle
 {
     public class Startup
     {
-        //https://www.youtube.com/watch?v=oXNslgIXIbQ logging
+        //https://www.youtube.com/watch?v=oXNslgIXIbQ
 
         public IConfiguration Configuration { get; set; }
         public Startup( IConfiguration configuration)

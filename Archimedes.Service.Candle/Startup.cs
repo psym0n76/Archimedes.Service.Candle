@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Archimedes.Library.Domain;
-using Archimedes.Library.Extensions;
+using Archimedes.Library.Hangfire;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -33,17 +33,13 @@ namespace Archimedes.Service.Candle
 
             var config = Configuration.GetSection("AppSettings").Get<Config>();
 
-            config.DatabaseServer.SetInternetInformationServicesPermissions();
-
-            var hangfireConnection =
-                config.HangfireDatabaseName.BuildTestHangfireConnection(config.HangfireDatabaseName,
-                    config.DatabaseServer);
+            config.SetInternetInformationServicesPermissions();
 
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(hangfireConnection, new SqlServerStorageOptions
+                .UseSqlServerStorage(config.BuildTestHangfireConnection(), new SqlServerStorageOptions
                 {
                     CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
                     SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),

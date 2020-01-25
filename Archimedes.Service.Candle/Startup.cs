@@ -33,7 +33,7 @@ namespace Archimedes.Service.Candle
 
             var config = Configuration.GetSection("AppSettings").Get<Config>();
 
-            config.SetInternetInformationServicesPermissions();
+            //config.SetInternetInformationServicesPermissions();
 
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
@@ -50,6 +50,8 @@ namespace Archimedes.Service.Candle
                 }));
 
             services.AddHangfireServer();
+
+            config.SetInternetInformationServicesPermissions();
         }
 
 

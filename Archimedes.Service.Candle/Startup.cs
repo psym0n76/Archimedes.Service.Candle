@@ -33,8 +33,6 @@ namespace Archimedes.Service.Candle
 
             var config = Configuration.GetSection("AppSettings").Get<Config>();
 
-            //config.SetInternetInformationServicesPermissions();
-
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()

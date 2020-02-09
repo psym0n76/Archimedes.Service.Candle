@@ -30,17 +30,17 @@ namespace Archimedes.Service.Candle
             // var crom = Hangfire.Cron.Hourly(1);
             // https://github.com/HangfireIO/Hangfire/issues/1365 cron running from a set time 
 
-            RecurringJob.AddOrUpdate("job1",
+            RecurringJob.AddOrUpdate("Job: 1min Request",
                 () => SendCandleRequest("1min"),
                 cronMinutely);
 
-            //RecurringJob.AddOrUpdate("job2",
-            //    () => SendCandleRequest("5min"),
-            //    cronMinutelyFive);
+            RecurringJob.AddOrUpdate("Job: 5min Request",
+                () => SendCandleRequest("5min"),
+                cronMinutelyFive);
 
-            //RecurringJob.AddOrUpdate("job3",
-            //    () => SendCandleRequest("3min"),
-            //    cronMinutelyThree);
+            RecurringJob.AddOrUpdate("Job: 3min Request",
+                () => SendCandleRequest("3min"),
+                cronMinutelyThree);
         }
 
 

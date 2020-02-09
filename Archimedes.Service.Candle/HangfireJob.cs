@@ -34,13 +34,13 @@ namespace Archimedes.Service.Candle
                 () => SendCandleRequest("1min"),
                 cronMinutely);
 
-            RecurringJob.AddOrUpdate("job2",
-                () => SendCandleRequest("5min"),
-                cronMinutelyFive);
+            //RecurringJob.AddOrUpdate("job2",
+            //    () => SendCandleRequest("5min"),
+            //    cronMinutelyFive);
 
-            RecurringJob.AddOrUpdate("job3",
-                () => SendCandleRequest("3min"),
-                cronMinutelyThree);
+            //RecurringJob.AddOrUpdate("job3",
+            //    () => SendCandleRequest("3min"),
+            //    cronMinutelyThree);
         }
 
 

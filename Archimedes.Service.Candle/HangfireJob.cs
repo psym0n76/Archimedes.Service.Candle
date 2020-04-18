@@ -55,10 +55,8 @@ namespace Archimedes.Service.Candle
 
             _logger.LogInformation("Sending request to rabbit queue: " + queueName);
 
-            using (var bus = RabbitHutch.CreateBus($"host={_config.RabbitHutchConnection}"))
-            {
-                bus.Publish(request);
-            }
+            using var bus = RabbitHutch.CreateBus($"host={_config.RabbitHutchConnection}");
+            bus.Publish(request);
         }
     }
 }

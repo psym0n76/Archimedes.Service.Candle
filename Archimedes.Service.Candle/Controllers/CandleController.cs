@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Microsoft.Extensions.Options;
 
@@ -18,16 +19,21 @@ namespace Archimedes.Service.Candle.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new[] { "candle", "candle", "version: " + _config.AppVersion };
+            return Ok(new[] {"candle", "candle", "version: " + _config.AppVersion});
         }
 
-        // GET: api/Candle/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{message}")]
+        public IEnumerable<string> Get(string message)
         {
-            return "value";
+            return new[] {"candle", "candle", "version: " + _config.AppVersion, message};
+        }
+
+        [HttpGet("{message}/{message2}")]
+        public IEnumerable<string> Get(string message, string message2)
+        {
+            return new[] {"candle", "candle", "version: " + _config.AppVersion, message, message2};
         }
 
         // POST: api/Candle

@@ -18,6 +18,7 @@ namespace Archimedes.Service.Candle
         //https://www.youtube.com/watch?v=oXNslgIXIbQ
 
         public IConfiguration Configuration { get; set; }
+
         public Startup( IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,6 +27,7 @@ namespace Archimedes.Service.Candle
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IHangfireJob, HangfireJob>();
+            services.AddTransient<ICandleRequestManager, CandleRequestManager>();
             services.AddLogging();
             services.Configure<Config>(Configuration.GetSection("AppSettings"));
             services.AddSingleton(Configuration);
@@ -37,7 +39,7 @@ namespace Archimedes.Service.Candle
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(config.BuildTestHangfireConnection(), new SqlServerStorageOptions
+                .UseSqlServerStorage(config.BuildHangfireConnection(), new SqlServerStorageOptions
                 {
                     CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
                     SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
@@ -51,7 +53,6 @@ namespace Archimedes.Service.Candle
 
             config.SetInternetInformationServicesPermissions();
         }
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IHangfireJob job,ILogger<Startup> logger)
         {

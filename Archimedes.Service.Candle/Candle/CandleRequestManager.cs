@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Message;
 using Archimedes.Service.Candle.Http;
@@ -22,22 +24,20 @@ namespace Archimedes.Service.Candle
             _markets = markets;
         }
 
-        public void SendRequest(string granularity)
+        public async Task SendRequestAsync(string granularity)
         {
-            var markets = _markets.Get().Result;
+            var markets = await  _markets.GetMarketAsync(new CancellationToken());
 
             foreach (var market in markets)
             {
                 if (market.Active && market.TimeFrameInterval == granularity)
                 {
-                    ProcessCandle(market);
+                    SendToQueue(market);
                 }
             }
         }
-
-        private void ProcessCandle(MarketDto market)
+        private void SendToQueue(MarketDto market)
         {
-
             var endDate = DateTime.Now.RoundDownTime(market.Interval);
 
             var request = new RequestCandle(market.MaxDate, endDate, _config.MaxIntervalCandles)

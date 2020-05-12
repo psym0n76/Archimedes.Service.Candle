@@ -1,19 +1,15 @@
 ﻿using Hangfire;
-using Archimedes.Library.Domain;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Archimedes.Service.Candle
 {
     public class HangfireJob : IHangfireJob
     {
-        private readonly Config _config;
         private readonly ILogger<HangfireJob> _logger;
         private readonly ICandleRequestManager _candle;
 
-        public HangfireJob(IOptions<Config> config, ILogger<HangfireJob> log, ICandleRequestManager candle)
+        public HangfireJob(ILogger<HangfireJob> log, ICandleRequestManager candle)
         {
-            _config = config.Value;
             _logger = log;
             _candle = candle;
         }
@@ -32,15 +28,15 @@ namespace Archimedes.Service.Candle
                 // https://github.com/HangfireIO/Hangfire/issues/1365 cron running from a set time 
 
                 RecurringJob.AddOrUpdate("Job: 1min Request",
-                    () => _candle.SendRequest("1min"),
+                    () => _candle.SendRequestAsync("1min"),
                     cronMinutely);
 
                 RecurringJob.AddOrUpdate("Job: 5min Request",
-                    () => _candle.SendRequest("5min"),
+                    () => _candle.SendRequestAsync("5min"),
                     cronMinutelyFive);
 
                 RecurringJob.AddOrUpdate("Job: 3min Request",
-                    () => _candle.SendRequest("3min"),
+                    () => _candle.SendRequestAsync("3min"),
                     cronMinutelyThree);
             }
             finally

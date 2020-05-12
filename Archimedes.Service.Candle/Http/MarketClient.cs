@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
+using Archimedes.Library.Extensions;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace Archimedes.Service.Candle.Http
 {
@@ -20,19 +21,18 @@ namespace Archimedes.Service.Candle.Http
             _client = httpClient;
         }
 
-        public async Task<IEnumerable<MarketDto>> Get()
+        public async Task<IEnumerable<MarketDto>> GetMarketAsync(CancellationToken ct = default)
         {
-            var response = await _client.GetAsync(RequestUri);
+            var request = new HttpRequestMessage(HttpMethod.Get, RequestUri);
+
+            var response = await _client.SendAsync(request, ct);
 
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                return Array.Empty<MarketDto>();
             }
 
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var market = JsonConvert.DeserializeObject<IEnumerable<MarketDto>>(responseJson);
-
-            return market;
+            return await response.Content.ReadAsAsync<IEnumerable<MarketDto>>();
         }
     }
 }

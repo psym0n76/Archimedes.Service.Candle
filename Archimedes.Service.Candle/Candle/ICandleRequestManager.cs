@@ -1,7 +1,10 @@
-﻿namespace Archimedes.Service.Candle
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Archimedes.Service.Candle
 {
     public interface ICandleRequestManager
     {
-        void SendRequest(string queueName);
+        Task SendRequestAsync(string granularity);
     }
 }

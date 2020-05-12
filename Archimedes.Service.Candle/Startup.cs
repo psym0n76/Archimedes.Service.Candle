@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Hangfire;
+using Archimedes.Service.Candle.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -19,13 +20,14 @@ namespace Archimedes.Service.Candle
 
         public IConfiguration Configuration { get; set; }
 
-        public Startup( IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient<IMarketClient, MarketClient>();
             services.AddScoped<IHangfireJob, HangfireJob>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();
             services.AddLogging();
@@ -54,7 +56,8 @@ namespace Archimedes.Service.Candle
             config.SetInternetInformationServicesPermissions();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IHangfireJob job,ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHangfireJob job,
+            ILogger<Startup> logger)
         {
             logger.LogInformation("Started configure:");
 
@@ -64,17 +67,11 @@ namespace Archimedes.Service.Candle
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseHangfireDashboard();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             job.RunJob();
         }

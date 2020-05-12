@@ -35,23 +35,5 @@ namespace Archimedes.Service.Candle.Controllers
         {
             return new[] {"candle", "candle", "version: " + _config.AppVersion, message, message2};
         }
-
-        // POST: api/Candle
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/Candle/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

@@ -13,14 +13,12 @@ namespace Archimedes.Service.Candle
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
+                logger.Info("Initialise Main");
                 CreateWebHostBuilder(args).Build().Run();
             }
             catch (Exception e)
             {
                 logger.Error(e, "Stopped program because of exception");
-                Console.WriteLine(e);
-                throw;
             }
             finally
             {

@@ -24,7 +24,6 @@ namespace Archimedes.Service.Candle
             {
                 NLog.LogManager.Shutdown();
             }
-
         }
 
         public static IHostBuilder CreateWebHostBuilder(string[] args) =>

@@ -28,12 +28,17 @@ namespace Archimedes.Service.Candle
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //logger.LogInformation("Started configuration: Waiting 10 Secs for Rabbit");
+            Thread.Sleep(10000);
+            //logger.LogInformation("Started configuration: Finished waiting for Rabbit");
+
             services.AddHttpClient<IMarketClient, MarketClient>();
             services.AddScoped<IHangfireJob, HangfireJob>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();
             services.AddLogging();
             services.Configure<Config>(Configuration.GetSection("AppSettings"));
             services.AddSingleton(Configuration);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             var config = Configuration.GetSection("AppSettings").Get<Config>();
@@ -60,9 +65,9 @@ namespace Archimedes.Service.Candle
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHangfireJob job,
             ILogger<Startup> logger)
         {
-            logger.LogInformation("Started configuration: Waiting 10 Secs for Rabbit");
-            Thread.Sleep(10000);
-            logger.LogInformation("Started configuration: Finished waiting for Rabbit");
+            //logger.LogInformation("Started configuration: Waiting 10 Secs for Rabbit");
+            //Thread.Sleep(10000);
+            //logger.LogInformation("Started configuration: Finished waiting for Rabbit");
 
             if (env.IsDevelopment())
             {

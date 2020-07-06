@@ -30,7 +30,7 @@ namespace Archimedes.Service.Price
                 Text = "Test Text"
             };
 
-            using var bus = RabbitHutch.CreateBus($"host={_config.RabbitHutchConnection}");
+            using var bus = RabbitHutch.CreateBus($"{_config.RabbitHutchConnection}");
             await bus.PublishAsync(request);
 
             _logger.LogInformation($"Sending request to rabbit: {request}");

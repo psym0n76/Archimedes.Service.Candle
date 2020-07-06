@@ -52,7 +52,7 @@ namespace Archimedes.Service.Candle
                 request.StartDate = range.StartDate;
                 request.EndDate = range.EndDate;
 
-                using var bus = RabbitHutch.CreateBus($"host={_config.RabbitHutchConnection}");
+                using var bus = RabbitHutch.CreateBus($"{_config.RabbitHutchConnection}");
                 bus.Publish(request);
             }
 

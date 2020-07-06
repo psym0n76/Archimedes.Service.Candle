@@ -10,6 +10,7 @@ using System.Threading;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Hangfire;
 using Archimedes.Service.Candle.Http;
+using Archimedes.Service.Price;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -28,12 +29,13 @@ namespace Archimedes.Service.Candle
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //logger.LogInformation("Started configuration: Waiting 10 Secs for Rabbit");
+            //Required to ensure hangfire is setup
             Thread.Sleep(10000);
-            //logger.LogInformation("Started configuration: Finished waiting for Rabbit");
+
 
             services.AddHttpClient<IMarketClient, MarketClient>();
             services.AddScoped<IHangfireJob, HangfireJob>();
+            services.AddTransient<IPriceRequestManager, PriceRequestManager>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();
             services.AddLogging();
             services.Configure<Config>(Configuration.GetSection("AppSettings"));
@@ -65,10 +67,6 @@ namespace Archimedes.Service.Candle
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHangfireJob job,
             ILogger<Startup> logger)
         {
-            //logger.LogInformation("Started configuration: Waiting 10 Secs for Rabbit");
-            //Thread.Sleep(10000);
-            //logger.LogInformation("Started configuration: Finished waiting for Rabbit");
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

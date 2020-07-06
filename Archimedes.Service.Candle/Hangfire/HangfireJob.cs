@@ -1,4 +1,6 @@
-﻿using Hangfire;
+﻿using System;
+using Archimedes.Service.Price;
+using Hangfire;
 using Microsoft.Extensions.Logging;
 
 namespace Archimedes.Service.Candle
@@ -7,11 +9,13 @@ namespace Archimedes.Service.Candle
     {
         private readonly ILogger<HangfireJob> _logger;
         private readonly ICandleRequestManager _candle;
+        private readonly IPriceRequestManager _price;
 
-        public HangfireJob(ILogger<HangfireJob> log, ICandleRequestManager candle)
+        public HangfireJob(ILogger<HangfireJob> log, ICandleRequestManager candle, IPriceRequestManager price)
         {
             _logger = log;
             _candle = candle;
+            _price = price;
         }
 
         public void RunJob()
@@ -38,10 +42,15 @@ namespace Archimedes.Service.Candle
                 RecurringJob.AddOrUpdate("Job: 3min Request",
                     () => _candle.SendRequestAsync("3min"),
                     cronMinutelyThree);
+
+                //test
+                RecurringJob.AddOrUpdate("Job: 1Min Price Request",
+                    () => _price.SendToQueueAsync(), cronMinutely);
+
             }
-            finally
+            catch (Exception e)
             {
-                _logger.LogError("Critical Error");
+                _logger.LogError($"Critical Error {e.Message} {e.StackTrace}");
             }
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Hangfire;
 using Archimedes.Service.Candle.Http;
@@ -59,7 +60,9 @@ namespace Archimedes.Service.Candle
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHangfireJob job,
             ILogger<Startup> logger)
         {
-            logger.LogInformation("Started configure:");
+            logger.LogInformation("Started configuration: Waiting 10 Secs for Rabbit");
+            Thread.Sleep(10000);
+            logger.LogInformation("Started configuration: Finished waiting for Rabbit");
 
             if (env.IsDevelopment())
             {

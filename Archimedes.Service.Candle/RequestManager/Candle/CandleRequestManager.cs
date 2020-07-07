@@ -7,6 +7,7 @@ using Archimedes.Service.Candle.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Archimedes.Library.EasyNetQ;
+using Archimedes.Library.Message.Dto;
 
 namespace Archimedes.Service.Candle
 {

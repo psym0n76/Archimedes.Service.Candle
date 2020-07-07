@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
+using Archimedes.Library.Message.Dto;
 using Archimedes.Service.Candle.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

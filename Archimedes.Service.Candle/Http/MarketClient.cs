@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Extensions;
+using Archimedes.Library.Message.Dto;
 using Microsoft.Extensions.Options;
 
 namespace Archimedes.Service.Candle.Http

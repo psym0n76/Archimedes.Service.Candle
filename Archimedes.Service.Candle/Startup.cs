@@ -34,23 +34,32 @@ namespace Archimedes.Service.Candle
             //Required to ensure hangfire is setup
             Thread.Sleep(10000);
 
+            services.Configure<Config>(Configuration.GetSection("AppSettings"));
+            services.AddSingleton(Configuration);
+            var config = Configuration.GetSection("AppSettings").Get<Config>();
 
             services.AddHttpClient<IMarketClient, MarketClient>();
             services.AddScoped<IHangfireJob, HangfireJob>();
 
-            services.AddTransient<INetQPublish<RequestPrice>,NetQPublish<RequestPrice>>();
-            services.AddTransient<INetQPublish<RequestCandle>,NetQPublish<RequestCandle>>();
-            services.AddTransient<INetQPublish<RequestTrade>,NetQPublish<RequestTrade>>();
+            services.AddTransient<INetQPublish<RequestCandle>>(x =>
+                new NetQPublish<RequestCandle>(config.RabbitHutchConnection));
+
+            services.AddTransient<INetQPublish<RequestTrade>>(x =>
+                new NetQPublish<RequestTrade>(config.RabbitHutchConnection));
+
+
+            services.AddTransient<INetQPublish<RequestPrice>>(x =>
+                new NetQPublish<RequestPrice>(config.RabbitHutchConnection));
+
 
             services.AddTransient<IPriceRequestManager, PriceRequestManager>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();
             services.AddLogging();
-            services.Configure<Config>(Configuration.GetSection("AppSettings"));
-            services.AddSingleton(Configuration);
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            var config = Configuration.GetSection("AppSettings").Get<Config>();
+
 
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)

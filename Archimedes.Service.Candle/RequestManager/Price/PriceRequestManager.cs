@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Message;
 using Archimedes.Service.Candle;
-using EasyNetQ;
+using Archimedes.Service.Candle.Publishers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -12,13 +12,14 @@ namespace Archimedes.Service.Price
     public class PriceRequestManager : IPriceRequestManager
     {
         //validation https://lostechies.com/jimmybogard/2007/10/24/entity-validation-with-visitors-and-extension-methods/
-        private readonly Config _config;
         private readonly ILogger<HangfireJob> _logger;
+        private readonly INetQPublish<RequestPrice> _publish;
 
-        public PriceRequestManager(IOptions<Config> config, ILogger<HangfireJob> logger)
+        public PriceRequestManager(IOptions<Config> config, ILogger<HangfireJob> logger,
+            INetQPublish<RequestPrice> publish)
         {
-            _config = config.Value;
             _logger = logger;
+            _publish = publish;
         }
 
         public async Task SendToQueueAsync()
@@ -30,8 +31,7 @@ namespace Archimedes.Service.Price
                 Text = "Test Text"
             };
 
-            using var bus = RabbitHutch.CreateBus($"{_config.RabbitHutchConnection}");
-            await bus.PublishAsync(request);
+            await _publish.PublishMessage(request);
 
             _logger.LogInformation($"Sending request to rabbit: {request}");
         }

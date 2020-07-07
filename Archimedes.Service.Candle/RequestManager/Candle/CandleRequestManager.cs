@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Message;
 using Archimedes.Service.Candle.Http;
-using EasyNetQ;
+using Archimedes.Service.Candle.Publishers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -16,12 +16,14 @@ namespace Archimedes.Service.Candle
         private readonly Config _config;
         private readonly ILogger<HangfireJob> _logger;
         private readonly IMarketClient _markets;
+        private readonly INetQPublish<RequestCandle> _publish;
 
-        public CandleRequestManager(IOptions<Config> config, ILogger<HangfireJob> logger, IMarketClient markets)
+        public CandleRequestManager(IOptions<Config> config, ILogger<HangfireJob> logger, IMarketClient markets, INetQPublish<RequestCandle> publish)
         {
             _config = config.Value;
             _logger = logger;
             _markets = markets;
+            _publish = publish;
         }
 
         public async Task SendRequestAsync(string granularity)
@@ -32,11 +34,11 @@ namespace Archimedes.Service.Candle
             {
                 if (market.Active && market.TimeFrameInterval == granularity)
                 {
-                    SendToQueue(market);
+                    await SendToQueue(market);
                 }
             }
         }
-        private void SendToQueue(MarketDto market)
+        private async Task SendToQueue(MarketDto market)
         {
             var endDate = DateTime.Now.RoundDownTime(market.Interval);
 
@@ -52,8 +54,7 @@ namespace Archimedes.Service.Candle
                 request.StartDate = range.StartDate;
                 request.EndDate = range.EndDate;
 
-                using var bus = RabbitHutch.CreateBus($"{_config.RabbitHutchConnection}");
-                bus.Publish(request);
+               await _publish.PublishMessage(request);
             }
 
             _logger.LogInformation($"Sending request to rabbit: {request}");

@@ -9,7 +9,9 @@ using System;
 using System.Threading;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Hangfire;
+using Archimedes.Library.Message;
 using Archimedes.Service.Candle.Http;
+using Archimedes.Service.Candle.Publishers;
 using Archimedes.Service.Price;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -35,6 +37,10 @@ namespace Archimedes.Service.Candle
 
             services.AddHttpClient<IMarketClient, MarketClient>();
             services.AddScoped<IHangfireJob, HangfireJob>();
+
+            services.AddTransient<INetQPublish<RequestPrice>,NetQPublish<RequestPrice>>();
+            services.AddTransient<INetQPublish<RequestCandle>,NetQPublish<RequestCandle>>();
+
             services.AddTransient<IPriceRequestManager, PriceRequestManager>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();
             services.AddLogging();

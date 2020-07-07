@@ -39,6 +39,7 @@ namespace Archimedes.Service.Candle
             var config = Configuration.GetSection("AppSettings").Get<Config>();
 
             services.AddHttpClient<IMarketClient, MarketClient>();
+
             services.AddScoped<IHangfireJob, HangfireJob>();
 
             services.AddTransient<INetQPublish<RequestCandle>>(x =>
@@ -80,8 +81,7 @@ namespace Archimedes.Service.Candle
             config.SetInternetInformationServicesPermissions();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHangfireJob job,
-            ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHangfireJob job)
         {
             if (env.IsDevelopment())
             {

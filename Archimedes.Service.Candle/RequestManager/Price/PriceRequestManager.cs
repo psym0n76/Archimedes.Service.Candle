@@ -20,7 +20,7 @@ namespace Archimedes.Service.Price
             _publish = publish;
         }
 
-        public async Task SendToQueueAsync()
+        public async Task SendRequestAsync()
         {
             var request = new RequestPrice()
             {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
+using Archimedes.Library.EasyNetQ;
 using Archimedes.Library.Message;
 using Archimedes.Service.Candle;
-using Archimedes.Service.Candle.Publishers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

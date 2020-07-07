@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Message;
 using Archimedes.Service.Candle.Http;
-using Archimedes.Service.Candle.Publishers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Archimedes.Library.EasyNetQ;
 
 namespace Archimedes.Service.Candle
 {

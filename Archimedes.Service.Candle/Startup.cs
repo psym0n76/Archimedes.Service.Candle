@@ -40,7 +40,7 @@ namespace Archimedes.Service.Candle
 
             services.AddTransient<INetQPublish<RequestPrice>,NetQPublish<RequestPrice>>();
             services.AddTransient<INetQPublish<RequestCandle>,NetQPublish<RequestCandle>>();
-            services.AddTransient<INetQPublish<RequestPrice>,NetQPublish<RequestPrice>>();
+            services.AddTransient<INetQPublish<RequestTrade>,NetQPublish<RequestTrade>>();
 
             services.AddTransient<IPriceRequestManager, PriceRequestManager>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();

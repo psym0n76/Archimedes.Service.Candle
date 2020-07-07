@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Archimedes.Library.Domain;
 using Archimedes.Library.EasyNetQ;
 using Archimedes.Library.Message;
 using Archimedes.Service.Candle;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Archimedes.Service.Price
 {
@@ -15,7 +13,7 @@ namespace Archimedes.Service.Price
         private readonly ILogger<HangfireJob> _logger;
         private readonly INetQPublish<RequestPrice> _publish;
 
-        public PriceRequestManager(IOptions<Config> config, ILogger<HangfireJob> logger,
+        public PriceRequestManager(ILogger<HangfireJob> logger,
             INetQPublish<RequestPrice> publish)
         {
             _logger = logger;

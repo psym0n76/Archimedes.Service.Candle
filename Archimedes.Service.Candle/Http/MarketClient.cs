@@ -13,7 +13,7 @@ namespace Archimedes.Service.Candle.Http
     public class MarketClient : IMarketClient
     {
         private readonly HttpClient _client;
-        private const string RequestUri = "api/market";
+        private const string RequestUri = "market";
 
         public MarketClient(HttpClient httpClient, IOptions<Config> config)
         {

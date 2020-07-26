@@ -58,8 +58,6 @@ namespace Archimedes.Service.Candle
                 Interval = market.Interval,
             };
 
-            _logger.LogInformation($"Candle Request created: {request}");
-
             foreach (var range in request.DateRanges)
             {
                 request.StartDate = range.StartDate;

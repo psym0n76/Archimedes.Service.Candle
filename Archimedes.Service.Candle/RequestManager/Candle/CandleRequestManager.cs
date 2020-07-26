@@ -42,6 +42,7 @@ namespace Archimedes.Service.Candle
             {
                 if (market.Active && market.TimeFrameInterval == granularity)
                 {
+                    _logger.LogInformation($"Process Market: {market}");
                     await SendToQueue(market);
                 }
             }
@@ -56,6 +57,8 @@ namespace Archimedes.Service.Candle
                 TimeFrame = market.TimeFrame,
                 Interval = market.Interval,
             };
+
+            _logger.LogInformation($"Candle Request created: {request}");
 
             foreach (var range in request.DateRanges)
             {

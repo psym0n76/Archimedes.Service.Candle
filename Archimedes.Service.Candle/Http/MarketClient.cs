@@ -31,7 +31,12 @@ namespace Archimedes.Service.Candle.Http
             if (response.IsSuccessStatusCode)
             {
                 var markets = await response.Content.ReadAsAsync<IList<MarketDto>>();
-                _logger.LogInformation($"Successfully received Markets {markets}");
+
+                foreach (var market in markets)
+                {
+                    _logger.LogInformation($"Successfully received Market {market}");
+                }
+
                 return markets;
             }
 

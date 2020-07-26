@@ -32,7 +32,7 @@ namespace Archimedes.Service.Candle
         {
             var markets = await  _markets.GetMarketAsync(new CancellationToken());
 
-            if (markets != null && markets.Any())
+            if (markets == null || !markets.Any())
             {
                 _logger.LogWarning($"No Active Markets returned");
                 return;

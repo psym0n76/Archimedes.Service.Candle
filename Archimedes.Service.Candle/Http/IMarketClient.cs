@@ -7,6 +7,6 @@ namespace Archimedes.Service.Candle.Http
 {
     public interface IMarketClient
     {
-        Task<IEnumerable<MarketDto>> GetMarketAsync(CancellationToken ct);
+        Task<IList<MarketDto>> GetMarketAsync(CancellationToken ct);
     }
 }

@@ -24,7 +24,7 @@ namespace Archimedes.Service.Candle.Http
             _logger = logger;
         }
 
-        public async Task<IEnumerable<MarketDto>> GetMarketAsync(CancellationToken ct = default)
+        public async Task<IList<MarketDto>> GetMarketAsync(CancellationToken ct = default)
         {
             var response = await _client.GetAsync($"market",ct);
 
@@ -34,7 +34,7 @@ namespace Archimedes.Service.Candle.Http
                 return Array.Empty<MarketDto>();
             }
 
-            return await response.Content.ReadAsAsync<IEnumerable<MarketDto>>();
+            return await response.Content.ReadAsAsync<IList<MarketDto>>();
         }
     }
 }

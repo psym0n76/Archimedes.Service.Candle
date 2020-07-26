@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
@@ -31,6 +32,12 @@ namespace Archimedes.Service.Candle
         {
             var markets = await  _markets.GetMarketAsync(new CancellationToken());
 
+            if (markets != null && markets.Any())
+            {
+                _logger.LogWarning($"No Active Markets returned");
+                return;
+            }
+
             foreach (var market in markets)
             {
                 if (market.Active && market.TimeFrameInterval == granularity)
@@ -54,11 +61,11 @@ namespace Archimedes.Service.Candle
             {
                 request.StartDate = range.StartDate;
                 request.EndDate = range.EndDate;
+                
+                _logger.LogInformation($"Candle Request created and published to Queue: {request}");
 
                await _publish.PublishMessage(request);
             }
-
-            _logger.LogInformation($"Sending request to rabbit: {request}");
         }
     }
 }

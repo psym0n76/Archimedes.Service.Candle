@@ -28,13 +28,15 @@ namespace Archimedes.Service.Candle.Http
         {
             var response = await _client.GetAsync($"market",ct);
 
-            if (!response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                _logger.LogWarning($"Failed to Get {response.ReasonPhrase} from {_client.BaseAddress}/market");
-                return Array.Empty<MarketDto>();
+                var markets = await response.Content.ReadAsAsync<IList<MarketDto>>();
+                _logger.LogInformation($"Successfully received Markets {markets}");
+                return markets;
             }
 
-            return await response.Content.ReadAsAsync<IList<MarketDto>>();
+            _logger.LogWarning($"Failed to Get {response.ReasonPhrase} from {_client.BaseAddress}/market");
+            return Array.Empty<MarketDto>();
         }
     }
 }

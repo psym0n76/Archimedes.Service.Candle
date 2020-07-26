@@ -32,7 +32,6 @@ namespace Archimedes.Service.Price
 
             await _publish.PublishMessage(request);
 
-            _logger.LogInformation($"Sending request to rabbit: {request}");
         }
     }
 }

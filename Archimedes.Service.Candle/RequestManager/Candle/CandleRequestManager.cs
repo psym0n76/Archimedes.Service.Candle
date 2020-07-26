@@ -16,11 +16,11 @@ namespace Archimedes.Service.Candle
     {
         //validation https://lostechies.com/jimmybogard/2007/10/24/entity-validation-with-visitors-and-extension-methods/
         private readonly Config _config;
-        private readonly ILogger<HangfireJob> _logger;
+        private readonly ILogger<CandleRequestManager> _logger;
         private readonly IMarketClient _markets;
         private readonly INetQPublish<RequestCandle> _publish;
 
-        public CandleRequestManager(IOptions<Config> config, ILogger<HangfireJob> logger, IMarketClient markets, INetQPublish<RequestCandle> publish)
+        public CandleRequestManager(IOptions<Config> config, ILogger<CandleRequestManager> logger, IMarketClient markets, INetQPublish<RequestCandle> publish)
         {
             _config = config.Value;
             _logger = logger;

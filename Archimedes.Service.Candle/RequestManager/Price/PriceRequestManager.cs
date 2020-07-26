@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Archimedes.Library.EasyNetQ;
 using Archimedes.Library.Message;
-using Archimedes.Service.Candle;
 using Microsoft.Extensions.Logging;
 
 namespace Archimedes.Service.Price
@@ -10,10 +9,10 @@ namespace Archimedes.Service.Price
     public class PriceRequestManager : IPriceRequestManager
     {
         //validation https://lostechies.com/jimmybogard/2007/10/24/entity-validation-with-visitors-and-extension-methods/
-        private readonly ILogger<HangfireJob> _logger;
+        private readonly ILogger<PriceRequestManager> _logger;
         private readonly INetQPublish<RequestPrice> _publish;
 
-        public PriceRequestManager(ILogger<HangfireJob> logger,
+        public PriceRequestManager(ILogger<PriceRequestManager> logger,
             INetQPublish<RequestPrice> publish)
         {
             _logger = logger;
@@ -28,6 +27,8 @@ namespace Archimedes.Service.Price
                 Properties = new List<string>(),
                 Text = "Test Text"
             };
+
+            _logger.LogInformation($"Price Request created and published to Queue: {request}");
 
             await _publish.PublishMessage(request);
 

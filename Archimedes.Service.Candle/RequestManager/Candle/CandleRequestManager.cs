@@ -66,6 +66,8 @@ namespace Archimedes.Service.Candle
 
                 requestMessage += $"{request}\n";
 
+                //create a requestMessgeDto
+
                await _publish.PublishMessage(request);
             }
 

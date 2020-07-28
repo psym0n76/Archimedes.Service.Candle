@@ -48,14 +48,25 @@ namespace Archimedes.Service.Candle
         }
         private async Task SendToQueue(MarketDto market)
         {
-            var endDate = DateTime.Now.RoundDownTime(market.Interval);
+            //var request = new RequestCandle(market.MaxDate, endDate, _config.MaxIntervalCandles)
+            //{
+            //    Market = market.Name,
+            //    TimeFrame = market.TimeFrame,
+            //    Interval = market.Interval,
+            //};
 
-            var request = new RequestCandle(market.MaxDate, endDate, _config.MaxIntervalCandles)
+            var request = new RequestCandle()
             {
+                StartDate = market.MaxDate,
+                EndDate = DateTime.Now.RoundDownTime(market.Interval),
                 Market = market.Name,
                 TimeFrame = market.TimeFrame,
                 Interval = market.Interval,
+                MaxIntervals = _config.MaxIntervalCandles
             };
+
+            request.CalculateDateRanges();
+
 
             var requestMessage = "";
 

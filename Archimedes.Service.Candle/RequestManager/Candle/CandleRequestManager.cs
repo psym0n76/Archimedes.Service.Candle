@@ -58,9 +58,6 @@ namespace Archimedes.Service.Candle
                 MaxIntervals = _config.MaxIntervalCandles
             };
 
-            request.CalculateDateRanges();
-
-
             var requestMessage = "";
 
             foreach (var range in request.DateRanges)

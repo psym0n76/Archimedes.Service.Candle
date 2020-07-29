@@ -48,13 +48,6 @@ namespace Archimedes.Service.Candle
         }
         private async Task SendToQueue(MarketDto market)
         {
-            //var request = new RequestCandle(market.MaxDate, endDate, _config.MaxIntervalCandles)
-            //{
-            //    Market = market.Name,
-            //    TimeFrame = market.TimeFrame,
-            //    Interval = market.Interval,
-            //};
-
             var request = new RequestCandle()
             {
                 StartDate = market.MaxDate,
@@ -77,9 +70,7 @@ namespace Archimedes.Service.Candle
 
                 requestMessage += $"{request}\n";
 
-                //create a requestMessgeDto
-
-               await _publish.PublishMessage(request);
+                await _publish.PublishMessage(request);
             }
 
             _logger.LogInformation($"Candle Request created and published to Queue: {requestMessage}");

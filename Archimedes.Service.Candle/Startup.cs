@@ -11,6 +11,7 @@ using Archimedes.Library.Domain;
 using Archimedes.Library.EasyNetQ;
 using Archimedes.Library.Hangfire;
 using Archimedes.Library.Message;
+using Archimedes.Library.RabbitMq;
 using Archimedes.Service.Candle.Http;
 using Archimedes.Service.Price;
 using Microsoft.Extensions.Hosting;
@@ -42,15 +43,10 @@ namespace Archimedes.Service.Candle
 
             services.AddScoped<IHangfireJob, HangfireJob>();
 
-            services.AddTransient<INetQPublish<RequestCandle>>(x =>
-                new NetQPublish<RequestCandle>(config.RabbitHutchConnection));
+            services.AddTransient<IProducer<RequestCandle>>(x => new Producer<RequestCandle>("localhost", 5673));
 
-            services.AddTransient<INetQPublish<RequestTrade>>(x =>
-                new NetQPublish<RequestTrade>(config.RabbitHutchConnection));
+            services.AddTransient<IProducer<RequestPrice>>(x => new Producer<RequestPrice>("localhost", 5673));
 
-
-            services.AddTransient<INetQPublish<RequestPrice>>(x =>
-                new NetQPublish<RequestPrice>(config.RabbitHutchConnection));
 
 
             services.AddTransient<IPriceRequestManager, PriceRequestManager>();

@@ -7,8 +7,8 @@ using Archimedes.Library.Message;
 using Archimedes.Service.Candle.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Archimedes.Library.EasyNetQ;
 using Archimedes.Library.Message.Dto;
+using Archimedes.Library.RabbitMq;
 
 namespace Archimedes.Service.Candle
 {
@@ -18,14 +18,14 @@ namespace Archimedes.Service.Candle
         private readonly Config _config;
         private readonly ILogger<CandleRequestManager> _logger;
         private readonly IMarketClient _markets;
-        private readonly INetQPublish<RequestCandle> _publish;
+        private readonly IProducer<RequestCandle> _producer;
 
-        public CandleRequestManager(IOptions<Config> config, ILogger<CandleRequestManager> logger, IMarketClient markets, INetQPublish<RequestCandle> publish)
+        public CandleRequestManager(IOptions<Config> config, ILogger<CandleRequestManager> logger, IMarketClient markets, IProducer<RequestCandle> producer)
         {
             _config = config.Value;
             _logger = logger;
             _markets = markets;
-            _publish = publish;
+            _producer = producer;
         }
 
         public async Task SendRequestAsync(string granularity)
@@ -42,11 +42,11 @@ namespace Archimedes.Service.Candle
             {
                 if (market.Active && market.TimeFrameInterval == granularity)
                 {
-                    await SendToQueue(market);
+                    SendToQueue(market);
                 }
             }
         }
-        private async Task SendToQueue(MarketDto market)
+        private void SendToQueue(MarketDto market)
         {
             var request = new RequestCandle()
             {
@@ -58,7 +58,7 @@ namespace Archimedes.Service.Candle
                 MaxIntervals = _config.MaxIntervalCandles
             };
 
-            var requestMessage = "";
+            var requestMessage = string.Empty;
 
             foreach (var range in request.DateRanges)
             {
@@ -67,11 +67,12 @@ namespace Archimedes.Service.Candle
 
                 requestMessage += $"{request}\n";
 
-                await _publish.PublishMessage(request);
+                _producer.PublishMessage(request,
+                    nameof(request),
+                    "Archimedes_DEV");
             }
 
             _logger.LogInformation($"Candle Request created and published to Queue: {requestMessage}");
-
         }
     }
 }

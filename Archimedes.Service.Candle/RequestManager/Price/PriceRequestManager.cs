@@ -1,25 +1,22 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Archimedes.Library.EasyNetQ;
 using Archimedes.Library.Message;
+using Archimedes.Library.RabbitMq;
 using Microsoft.Extensions.Logging;
 
 namespace Archimedes.Service.Price
 {
     public class PriceRequestManager : IPriceRequestManager
     {
-        //validation https://lostechies.com/jimmybogard/2007/10/24/entity-validation-with-visitors-and-extension-methods/
         private readonly ILogger<PriceRequestManager> _logger;
-        private readonly INetQPublish<RequestPrice> _publish;
+        private readonly IProducer<RequestPrice> _producer;
 
-        public PriceRequestManager(ILogger<PriceRequestManager> logger,
-            INetQPublish<RequestPrice> publish)
+        public PriceRequestManager(ILogger<PriceRequestManager> logger, IProducer<RequestPrice> producer)
         {
             _logger = logger;
-            _publish = publish;
+            _producer = producer;
         }
 
-        public async Task SendRequestAsync()
+        public void SendRequest()
         {
             var request = new RequestPrice()
             {
@@ -30,7 +27,7 @@ namespace Archimedes.Service.Price
 
             _logger.LogInformation($"Price Request created and published to Queue: {request}");
 
-            await _publish.PublishMessage(request);
+           _producer.PublishMessage(request,nameof(request),"Archimedes_DEV");
 
         }
     }

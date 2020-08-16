@@ -45,7 +45,7 @@ namespace Archimedes.Service.Candle
 
                 //test
                 RecurringJob.AddOrUpdate("Job: 1min Price Request",
-                    () => _price.SendRequestAsync(), cronMinutely);
+                    () => _price.SendRequest(), cronMinutely);
 
 
             }

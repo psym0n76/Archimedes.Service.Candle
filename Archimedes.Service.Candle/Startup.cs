@@ -8,14 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using Archimedes.Library.Domain;
-using Archimedes.Library.EasyNetQ;
 using Archimedes.Library.Hangfire;
 using Archimedes.Library.Message;
 using Archimedes.Library.RabbitMq;
 using Archimedes.Service.Candle.Http;
 using Archimedes.Service.Price;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Archimedes.Service.Candle
 {

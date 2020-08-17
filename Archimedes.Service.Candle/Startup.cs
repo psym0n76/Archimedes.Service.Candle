@@ -41,20 +41,14 @@ namespace Archimedes.Service.Candle
 
             services.AddScoped<IHangfireJob, HangfireJob>();
 
-            services.AddTransient<IProducer<RequestCandle>>(x => new Producer<RequestCandle>("localhost", 5673));
-
-            services.AddTransient<IProducer<RequestPrice>>(x => new Producer<RequestPrice>("localhost", 5673));
-
-
+            services.AddTransient<IProducer<RequestCandle>>(x => new Producer<RequestCandle>("localhost", 5673,"Archimedes_DEV"));
+            services.AddTransient<IProducer<RequestPrice>>(x => new Producer<RequestPrice>("localhost", 5673,"Archimedes_DEV"));
 
             services.AddTransient<IPriceRequestManager, PriceRequestManager>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();
             services.AddLogging();
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
-
 
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)

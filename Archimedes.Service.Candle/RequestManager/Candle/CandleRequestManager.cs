@@ -68,8 +68,7 @@ namespace Archimedes.Service.Candle
                 requestMessage += $"{request}\n";
 
                 _producer.PublishMessage(request,
-                    nameof(request),
-                    "Archimedes_DEV");
+                    nameof(request));
             }
 
             _logger.LogInformation($"Candle Request created and published to Queue: {requestMessage}");

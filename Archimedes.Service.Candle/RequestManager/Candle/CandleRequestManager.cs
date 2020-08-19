@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
+using Archimedes.Library.Extensions;
 using Archimedes.Library.Message;
 using Archimedes.Service.Candle.Http;
 using Microsoft.Extensions.Logging;
@@ -19,9 +19,9 @@ namespace Archimedes.Service.Candle
         private readonly Config _config;
         private readonly ILogger<CandleRequestManager> _logger;
         private readonly IMarketClient _markets;
-        private readonly IProducer<RequestCandle> _producer;
+        private readonly IProducer<CandleMessage> _producer;
 
-        public CandleRequestManager(IOptions<Config> config, ILogger<CandleRequestManager> logger, IMarketClient markets, IProducer<RequestCandle> producer)
+        public CandleRequestManager(IOptions<Config> config, ILogger<CandleRequestManager> logger, IMarketClient markets, IProducer<CandleMessage> producer)
         {
             _config = config.Value;
             _logger = logger;
@@ -49,30 +49,29 @@ namespace Archimedes.Service.Candle
         }
         private void SendToQueue(MarketDto market)
         {
-            var request = new RequestCandle()
+            var message = new CandleMessage
             {
                 StartDate = market.MaxDate,
                 EndDate = DateTime.Now.RoundDownTime(market.Interval),
                 Market = market.Name,
                 TimeFrame = market.TimeFrame,
                 Interval = market.Interval,
-                MaxIntervals = _config.MaxIntervalCandles,
-                
-                
+                MaxIntervals = _config.MaxIntervalCandles
             };
 
+            message.CountCandleIntervals();
+            message.CalculateDateRanges();
 
             var requestMessage = string.Empty;
 
-            foreach (var range in request.DateRanges)
+            foreach (var range in message.DateRanges)
             {
-                request.StartDate = range.StartDate;
-                request.EndDate = range.EndDate;
+                message.StartDate = range.StartDate;
+                message.EndDate = range.EndDate;
 
-                requestMessage += $"{request}\n";
+                requestMessage += $"{message}\n";
 
-                _producer.PublishMessage(request,
-                    nameof(request));
+                _producer.PublishMessage(message, nameof(message));
             }
 
             _logger.LogInformation($"Candle Request created and published to Queue: {requestMessage}");

@@ -41,7 +41,7 @@ namespace Archimedes.Service.Candle
 
             services.AddScoped<IHangfireJob, HangfireJob>();
 
-            services.AddTransient<IProducer<RequestCandle>>(x => new Producer<RequestCandle>("localhost", 5673,"Archimedes_DEV"));
+            services.AddTransient<IProducer<CandleMessage>>(x => new Producer<CandleMessage>("localhost", 5673,"Archimedes_DEV"));
 
             services.AddTransient<IPriceRequestManager, PriceRequestManager>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();

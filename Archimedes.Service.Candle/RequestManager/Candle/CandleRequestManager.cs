@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
@@ -55,8 +56,11 @@ namespace Archimedes.Service.Candle
                 Market = market.Name,
                 TimeFrame = market.TimeFrame,
                 Interval = market.Interval,
-                MaxIntervals = _config.MaxIntervalCandles
+                MaxIntervals = _config.MaxIntervalCandles,
+                
+                
             };
+
 
             var requestMessage = string.Empty;
 

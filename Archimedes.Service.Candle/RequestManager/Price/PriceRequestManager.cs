@@ -24,10 +24,9 @@ namespace Archimedes.Service.Price
                 Text = "Test Text"
             };
 
-            _logger.LogInformation($"Price Request created and published to Queue: {request}");
-
             _producer.PublishMessage(request, "PriceRequestQueue");
 
+            _logger.LogInformation($"Price Request created and published to Queue: {request}");
         }
     }
 }

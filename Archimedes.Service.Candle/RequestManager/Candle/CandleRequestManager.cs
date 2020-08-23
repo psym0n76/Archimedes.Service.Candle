@@ -66,7 +66,7 @@ namespace Archimedes.Service.Candle
             {
                 message.StartDate = range.StartDate;
                 message.EndDate = range.EndDate;
-
+                message.CountCandleIntervals();
                 _producer.PublishMessage(message, "CandleRequestQueue");
                 _logger.LogInformation($"Candle Request created and published to Queue: {message}");
             }

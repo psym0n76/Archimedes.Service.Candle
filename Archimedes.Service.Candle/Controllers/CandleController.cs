@@ -19,7 +19,7 @@ namespace Archimedes.Service.Candle.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
             return Ok(new[] {"candle", "candle", "version: " + _config.AppVersion});
         }

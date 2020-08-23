@@ -34,17 +34,17 @@ namespace Archimedes.Service.Candle
                     () => _candle.SendRequestAsync("1Min"),
                     cronMinutely);
 
-                RecurringJob.AddOrUpdate("Job: 5min Candle Request",
-                    () => _candle.SendRequestAsync("5Min"),
-                    cronMinutelyFive);
+                //RecurringJob.AddOrUpdate("Job: 5min Candle Request",
+                //    () => _candle.SendRequestAsync("5Min"),
+                //    cronMinutelyFive);
 
-                RecurringJob.AddOrUpdate("Job: 3min Candle Request",
-                    () => _candle.SendRequestAsync("3Min"),
-                    cronMinutelyThree);
+                //RecurringJob.AddOrUpdate("Job: 3min Candle Request",
+                //    () => _candle.SendRequestAsync("3Min"),
+                //    cronMinutelyThree);
 
-                //test
-                RecurringJob.AddOrUpdate("Job: 1min Price Request",
-                    () => _price.SendRequest(), cronMinutely);
+                ////test
+                //RecurringJob.AddOrUpdate("Job: 1min Price Request",
+                //    () => _price.SendRequest(), cronMinutely);
 
             }
             catch (Exception e)

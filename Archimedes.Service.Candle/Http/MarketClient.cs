@@ -27,7 +27,7 @@ namespace Archimedes.Service.Candle.Http
 
         public async Task<IList<MarketDto>> GetMarketAsync(CancellationToken ct = default)
         {
-            var response = await _client.GetAsync($"market",ct);
+            var response = await _client.GetAsync($"market", ct);
 
             if (response.IsSuccessStatusCode)
             {

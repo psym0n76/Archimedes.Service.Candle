@@ -8,9 +8,9 @@ namespace Archimedes.Service.Price
     public class PriceRequestManager : IPriceRequestManager
     {
         private readonly ILogger<PriceRequestManager> _logger;
-        private readonly IProducer<RequestPrice> _producer;
+        private readonly IProducer<PriceMessage> _producer;
 
-        public PriceRequestManager(ILogger<PriceRequestManager> logger, IProducer<RequestPrice> producer)
+        public PriceRequestManager(ILogger<PriceRequestManager> logger, IProducer<PriceMessage> producer)
         {
             _logger = logger;
             _producer = producer;
@@ -18,9 +18,8 @@ namespace Archimedes.Service.Price
 
         public void SendRequest()
         {
-            var request = new RequestPrice()
+            var request = new PriceMessage()
             {
-                Status = "Status Text",
                 Properties = new List<string>(),
                 Text = "Test Text"
             };

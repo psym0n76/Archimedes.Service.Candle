@@ -62,19 +62,14 @@ namespace Archimedes.Service.Candle
             message.CountCandleIntervals();
             message.CalculateDateRanges();
 
-            var requestMessage = string.Empty;
-
             foreach (var range in message.DateRanges)
             {
                 message.StartDate = range.StartDate;
                 message.EndDate = range.EndDate;
 
-                requestMessage += $"{message}\n";
-
                 _producer.PublishMessage(message, nameof(message));
+                _logger.LogInformation($"Candle Request created and published to Queue: {message}");
             }
-
-            _logger.LogInformation($"Candle Request created and published to Queue: {requestMessage}");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Archimedes.Service.Price
 
             _producer.PublishMessage(request, "PriceRequestQueue");
 
-            _logger.LogInformation($"Price Request created and published to Queue: {request}");
+            _logger.LogInformation($"Price Request created and published to PriceRequestQueue: {request}");
         }
     }
 }

@@ -55,6 +55,7 @@ namespace Archimedes.Service.Candle
                 EndDate = DateTime.Now.RoundDownTime(market.Interval),
                 Market = market.Name,
                 TimeFrame = market.TimeFrame,
+                TimeFrameBroker = market.BrokerTimeMinInterval,
                 Interval = market.Interval,
                 MaxIntervals = _config.MaxIntervalCandles
             };

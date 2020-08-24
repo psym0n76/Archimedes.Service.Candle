@@ -24,25 +24,30 @@ namespace Archimedes.Service.Candle
 
             const string cronMinutely = "0/1 * * * *";
             const string cronMinutelyFive = "0/5 * * * *";
+            const string cronMinutelyFifteen = "0/15 * * * *";
             const string cronMinutelyThree = "0/3 * * * *";
 
             try
             {
                 // https://github.com/HangfireIO/Hangfire/issues/1365 cron running from a set time 
 
+                RecurringJob.RemoveIfExists("Job: 1min Candle Request");
                 RecurringJob.AddOrUpdate("Job: 1min Candle Request",
                     () => _candle.SendRequestAsync("1Min"),
                     cronMinutely);
 
-                //RecurringJob.AddOrUpdate("Job: 5min Candle Request",
-                //    () => _candle.SendRequestAsync("5Min"),
-                //    cronMinutelyFive);
+                RecurringJob.RemoveIfExists("Job: 5min Candle Request");
+                RecurringJob.AddOrUpdate("Job: 5min Candle Request",
+                    () => _candle.SendRequestAsync("5Min"),
+                    cronMinutelyFive);
 
-                //RecurringJob.AddOrUpdate("Job: 3min Candle Request",
-                //    () => _candle.SendRequestAsync("3Min"),
-                //    cronMinutelyThree);
+                RecurringJob.AddOrUpdate("Job: 15min Candle Request",
+                    () => _candle.SendRequestAsync("15Min"),
+                    cronMinutelyFifteen);
 
                 ////test
+
+                RecurringJob.RemoveIfExists("Job: 1min Price Request");
                 RecurringJob.AddOrUpdate("Job: 1min Price Request",
                     () => _price.SendRequest(), cronMinutely);
 

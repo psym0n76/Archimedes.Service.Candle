@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Archimedes.Service.Price;
 using Hangfire;
 using Microsoft.Extensions.Logging;
@@ -44,7 +45,10 @@ namespace Archimedes.Service.Candle
                     () => _candle.SendRequestAsync("15Min"),
                     cronMinutelyFifteen);
 
-                _logger.LogInformation("Background Job started ");
+
+                _logger.LogInformation("Waiting 30 secs to start background Job");
+                Thread.Sleep(3000);
+
                 BackgroundJob.Enqueue(() => _price.SendRequest());
 
             }

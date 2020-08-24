@@ -43,8 +43,8 @@ namespace Archimedes.Service.Candle
                 //    cronMinutelyThree);
 
                 ////test
-                //RecurringJob.AddOrUpdate("Job: 1min Price Request",
-                //    () => _price.SendRequest(), cronMinutely);
+                RecurringJob.AddOrUpdate("Job: 1min Price Request",
+                    () => _price.SendRequest(), cronMinutely);
 
             }
             catch (Exception e)

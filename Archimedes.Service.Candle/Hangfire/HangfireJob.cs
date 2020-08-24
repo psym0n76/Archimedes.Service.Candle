@@ -25,7 +25,6 @@ namespace Archimedes.Service.Candle
             const string cronMinutely = "0/1 * * * *";
             const string cronMinutelyFive = "0/5 * * * *";
             const string cronMinutelyFifteen = "0/15 * * * *";
-            const string cronMinutelyThree = "0/3 * * * *";
 
             try
             {
@@ -45,11 +44,7 @@ namespace Archimedes.Service.Candle
                     () => _candle.SendRequestAsync("15Min"),
                     cronMinutelyFifteen);
 
-                ////test
-
-                RecurringJob.RemoveIfExists("Job: 1min Price Request");
-                RecurringJob.AddOrUpdate("Job: 1min Price Request",
-                    () => _price.SendRequest(), cronMinutely);
+                BackgroundJob.Enqueue(() => _price.SendRequest());
 
             }
             catch (Exception e)

@@ -44,6 +44,7 @@ namespace Archimedes.Service.Candle
                     () => _candle.SendRequestAsync("15Min"),
                     cronMinutelyFifteen);
 
+                _logger.LogInformation("Background Job started ");
                 BackgroundJob.Enqueue(() => _price.SendRequest());
 
             }

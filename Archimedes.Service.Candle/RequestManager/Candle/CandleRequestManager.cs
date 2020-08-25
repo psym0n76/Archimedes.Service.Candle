@@ -57,7 +57,8 @@ namespace Archimedes.Service.Candle
                 TimeFrame = market.TimeFrame,
                 TimeFrameBroker = market.BrokerTimeMinInterval,
                 Interval = market.Interval,
-                MaxIntervals = _config.MaxIntervalCandles
+                MaxIntervals = _config.MaxIntervalCandles,
+                MarketId = market.Id
             };
 
             message.CountCandleIntervals();

@@ -1,39 +1,50 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using Archimedes.Library.Domain;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Archimedes.Library.Domain;
+using Archimedes.Library.Message.Dto;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Archimedes.Service.Candle.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class HealthController : ControllerBase
     {
-        private readonly Config _config;
         private readonly ILogger<HealthController> _logger;
+        private readonly Config _config;
 
-        public HealthController(IOptions<Config> config, ILogger<HealthController> logger)
+        public HealthController(ILogger<HealthController> logger, IOptions<Config> config)
         {
-            _config = config.Value;
             _logger = logger;
+            _config = config.Value;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Get()
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<HealthMonitorDto> Get()
         {
+            var health = new HealthMonitorDto()
+            {
+                AppName = _config.ApplicationName,
+                Version = _config.AppVersion,
+                LastActiveVersion = _config.AppVersion,
+                Status = true,
+                LastUpdated = DateTime.Now,
+                LastActive = DateTime.Now
+            };
+
             try
             {
-                _logger.LogInformation($"{_config.ApplicationName} Version: {_config.AppVersion}");
-                return Ok($"{_config.ApplicationName} Version: {_config.AppVersion}");
+                _logger.LogInformation($"Health monitor:\n{health}");
+                return Ok(health);
             }
             catch (Exception e)
             {
                 _logger.LogError($"Error {e.Message} {e.StackTrace}");
-                return BadRequest();
+                return BadRequest("Error");
             }
         }
     }

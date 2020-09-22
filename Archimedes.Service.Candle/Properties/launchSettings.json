@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/candle",
+      "launchUrl": "api/health",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "Archimedes.Service.Candle": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/candle",
+      "launchUrl": "api/health",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

@@ -17,9 +17,9 @@ namespace Archimedes.Service.Candle.Controllers
     {
         private readonly Config _config;
         private readonly IMarketClient _client;
-        private readonly ILogger<CandleController> _logger;
+        private readonly ILogger<MarketController> _logger;
 
-        public MarketController(IOptions<Config> config, IMarketClient client, ILogger<CandleController> logger)
+        public MarketController(IOptions<Config> config, IMarketClient client, ILogger<MarketController> logger)
         {
             _client = client;
             _logger = logger;

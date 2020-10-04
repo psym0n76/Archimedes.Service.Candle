@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,9 +32,10 @@ namespace Archimedes.Service.Candle.Http
             {
                 var markets = await response.Content.ReadAsAsync<IList<MarketDto>>();
 
-                var marketMessage = markets.Aggregate("", (current, market) => current + $"{market}\n");
+               // var marketMessage = markets.Aggregate("", (current, market) => current + $"{market}\n");
+               //_logger.LogInformation($"Successfully received Market {marketMessage}");
 
-                _logger.LogInformation($"Successfully received Market {marketMessage}");
+               _logger.LogInformation($"Successfully received {markets.Count} Market records");
 
                 return markets;
             }

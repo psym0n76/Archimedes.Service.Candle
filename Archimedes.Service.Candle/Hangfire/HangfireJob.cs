@@ -24,9 +24,7 @@ namespace Archimedes.Service.Candle
             _logger.LogInformation("Job started info: ");
 
             const string cronMinutely = "0/1 * * * *";
-            const string cronMinutelyFive = "0/5 * * * *";
             const string cronMinutelyFifteenWorking = "0/15 * * * MON,TUE,WED,THU,FRI";
-
             const string cronMinutelyFiveWorkingWeek = "0/5 * * * MON,TUE,WED,THU,FRI";
 
             try

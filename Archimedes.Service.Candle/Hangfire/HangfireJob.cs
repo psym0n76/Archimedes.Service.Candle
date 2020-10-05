@@ -27,7 +27,7 @@ namespace Archimedes.Service.Candle
             const string cronMinutelyFive = "0/5 * * * *";
             const string cronMinutelyFifteen = "0/15 * * * *";
 
-            const string cronMinutelyFiveWorkingWeek = "0/5 0 ? * MON,TUE,WED,THU,FRI";
+            const string cronMinutelyFiveWorkingWeek = "0/5 * * * MON,TUE,WED,THU,FRI";
 
             try
             {

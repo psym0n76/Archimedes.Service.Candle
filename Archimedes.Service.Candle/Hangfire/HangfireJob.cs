@@ -25,7 +25,7 @@ namespace Archimedes.Service.Candle
 
             const string cronMinutely = "0/1 * * * *";
             const string cronMinutelyFive = "0/5 * * * *";
-            const string cronMinutelyFifteen = "0/15 * * * *";
+            const string cronMinutelyFifteenWorking = "0/15 * * * MON,TUE,WED,THU,FRI";
 
             const string cronMinutelyFiveWorkingWeek = "0/5 * * * MON,TUE,WED,THU,FRI";
 
@@ -45,7 +45,7 @@ namespace Archimedes.Service.Candle
 
                 RecurringJob.AddOrUpdate("Job: 15min Candle Request",
                     () => _candle.SendRequestAsync("15Min"),
-                    cronMinutelyFifteen);
+                    cronMinutelyFifteenWorking);
 
 
                 _logger.LogInformation("Waiting 30 secs to start background Job");

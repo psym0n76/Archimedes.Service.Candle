@@ -26,6 +26,9 @@ namespace Archimedes.Service.Candle
             const string cronMinutely = "0/1 * * * *";
             const string cronMinutelyFifteenWorking = "0/15 * * * MON,TUE,WED,THU,FRI";
             const string cronMinutelyFiveWorkingWeek = "0/5 * * * MON,TUE,WED,THU,FRI";
+            const string cronHourlyOneWorkingWeek = "0 0/1 * * MON,TUE,WED,THU,FRI";
+            const string cronHourlyFourWorkingWeek = "0 0/4 * * MON,TUE,WED,THU,FRI";
+            const string cronDailyWorkingWeek = "0 0 ? * MON,TUE,WED,THU,FRI";
 
             try
             {
@@ -45,12 +48,28 @@ namespace Archimedes.Service.Candle
                     () => _candle.SendRequestAsync("15Min"),
                     cronMinutelyFifteenWorking);
 
+                RecurringJob.AddOrUpdate("Job: 1H Candle Request",
+                    () => _candle.SendRequestAsync("1H"),
+                    cronHourlyOneWorkingWeek);
 
-                _logger.LogInformation("Waiting 30 secs to start background Job");
+                RecurringJob.AddOrUpdate("Job: 4H Candle Request",
+                    () => _candle.SendRequestAsync("4H"),
+                    cronHourlyFourWorkingWeek);
+
+                RecurringJob.AddOrUpdate("Job: 1D Candle Request",
+                    () => _candle.SendRequestAsync("1D"),
+                    cronDailyWorkingWeek);
+
+
+                _logger.LogInformation("Waiting 3 secs to start background Job");
                 Thread.Sleep(3000);
 
                 BackgroundJob.Enqueue(() => _price.SendRequest());
 
+                // this are run as soon as the systme is up and running
+                BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("1D"));
+                BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("1H"));
+                
             }
             catch (Exception e)
             {

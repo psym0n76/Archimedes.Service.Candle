@@ -52,8 +52,8 @@ namespace Archimedes.Service.Candle
             var message = new CandleMessage
             {
                 StartDate = market.MaxDate,
-                //EndDate = DateTime.Now.RoundDownTime(market.Interval),
-                EndDate = market.MaxDate.AddMinutes(market.Interval),
+                EndDate = DateTime.Now.RoundDownTime(market.Interval),
+                //EndDate = market.MaxDate.AddMinutes(market.Interval),
                 Market = market.Name,
                 TimeFrame = market.TimeFrame,
                 TimeFrameBroker = market.BrokerTimeMinInterval,
@@ -61,6 +61,8 @@ namespace Archimedes.Service.Candle
                 MaxIntervals = _config.MaxIntervalCandles,
                 MarketId = market.Id
             };
+
+            _logger.LogInformation("New Candle Message "+  message);
 
             message.CountCandleIntervals();
             message.CalculateDateRanges();

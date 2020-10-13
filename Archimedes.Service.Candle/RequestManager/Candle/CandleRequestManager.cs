@@ -70,7 +70,7 @@ namespace Archimedes.Service.Candle
                 message.EndDate = range.EndDate;
                 message.CountCandleIntervals();
                 _producer.PublishMessage(message, "CandleRequestQueue");
-                _logger.LogInformation($"Published to CandleRequestQueue: \n {message}");
+                _logger.LogInformation($"Published to CandleRequestQueue: {message}");
             }
         }
     }

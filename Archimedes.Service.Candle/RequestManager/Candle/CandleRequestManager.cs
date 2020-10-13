@@ -62,8 +62,6 @@ namespace Archimedes.Service.Candle
                 MarketId = market.Id
             };
 
-            _logger.LogInformation("New Candle Message "+  message);
-
             message.CountCandleIntervals();
             message.CalculateDateRanges();
 
@@ -73,7 +71,7 @@ namespace Archimedes.Service.Candle
                 message.EndDate = range.EndDate;
                 message.CountCandleIntervals();
                 _producer.PublishMessage(message, "CandleRequestQueue");
-                _logger.LogInformation($"Candle Request created and published to CandleRequestQueue: {message}");
+                _logger.LogInformation($"Candle Request created and published to CandleRequestQueue: \n {message}");
             }
         }
     }

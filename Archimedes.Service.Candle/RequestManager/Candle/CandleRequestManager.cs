@@ -49,14 +49,16 @@ namespace Archimedes.Service.Candle
         }
         private void SendToQueue(MarketDto market)
         {
+            var timeInterval = market.TimeFrame == "Min" ? market.BrokerTimeMinInterval : market.BrokerTimeInterval;
+
             var message = new CandleMessage
             {
                 StartDate = market.MaxDate,
-                EndDate = DateTime.Now.RoundDownTime(market.Interval),
+                EndDate = DateTime.Now.RoundDownTime(market.Interval.ToMinutes(market.TimeFrame)),
                 Market = market.Name,
                 TimeFrame = market.TimeFrame,
-                TimeFrameBroker = market.BrokerTimeMinInterval,
-                Interval = market.Interval,
+                TimeFrameBroker = timeInterval,
+                Interval = market.Interval.ToMinutes(market.TimeFrame),
                 MaxIntervals = _config.MaxIntervalCandles,
                 MarketId = market.Id
             };

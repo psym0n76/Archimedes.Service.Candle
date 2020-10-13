@@ -35,7 +35,7 @@ namespace Archimedes.Service.Candle
 
             if (markets == null || !markets.Any())
             {
-                _logger.LogWarning($"No Active Markets returned");
+                _logger.LogWarning($"Markets not FOUND");
                 return;
             }
 

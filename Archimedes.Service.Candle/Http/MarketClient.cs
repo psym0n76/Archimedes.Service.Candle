@@ -32,10 +32,7 @@ namespace Archimedes.Service.Candle.Http
             {
                 var markets = await response.Content.ReadAsAsync<IList<MarketDto>>();
 
-               // var marketMessage = markets.Aggregate("", (current, market) => current + $"{market}\n");
-               //_logger.LogInformation($"Successfully received Market {marketMessage}");
-
-               _logger.LogInformation($"Successfully received {markets.Count} Market records");
+               _logger.LogInformation($"Received {markets.Count} Market records");
 
                 return markets;
             }

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Archimedes.Library" Version="1.0.173" />
+    <PackageReference Include="Archimedes.Library" Version="1.0.176" />
     <PackageReference Include="hangfire" Version="1.7.15" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />

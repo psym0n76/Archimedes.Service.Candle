@@ -53,7 +53,6 @@ namespace Archimedes.Service.Candle
             {
                 StartDate = market.MaxDate,
                 EndDate = DateTime.Now.RoundDownTime(market.Interval),
-                //EndDate = market.MaxDate.AddMinutes(market.Interval),
                 Market = market.Name,
                 TimeFrame = market.TimeFrame,
                 TimeFrameBroker = market.BrokerTimeMinInterval,
@@ -71,7 +70,7 @@ namespace Archimedes.Service.Candle
                 message.EndDate = range.EndDate;
                 message.CountCandleIntervals();
                 _producer.PublishMessage(message, "CandleRequestQueue");
-                _logger.LogInformation($"Candle Request created and published to CandleRequestQueue: \n {message}");
+                _logger.LogInformation($"Published to CandleRequestQueue: \n {message}");
             }
         }
     }

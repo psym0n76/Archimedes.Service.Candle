@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Message;
 using Archimedes.Library.Message.Dto;
@@ -26,7 +27,7 @@ namespace Archimedes.Service.Price
             _config = config.Value;
         }
 
-        public async void SendRequestAsync(string granularity)
+        public async Task SendRequestAsync(string granularity)
         {
             var markets = await _markets.GetMarketAsync(new CancellationToken());
 

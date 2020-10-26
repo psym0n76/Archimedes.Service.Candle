@@ -1,7 +1,9 @@
-﻿namespace Archimedes.Service.Price
+﻿using System.Threading.Tasks;
+
+namespace Archimedes.Service.Price
 {
     public interface IPriceRequestManager
     {
-        void SendRequestAsync(string granularity);
+        Task SendRequestAsync(string granularity);
     }
 }

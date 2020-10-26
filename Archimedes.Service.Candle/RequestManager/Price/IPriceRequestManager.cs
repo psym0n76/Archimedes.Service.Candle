@@ -2,6 +2,6 @@
 {
     public interface IPriceRequestManager
     {
-        void SendRequest();
+        void SendRequestAsync(string granularity);
     }
 }

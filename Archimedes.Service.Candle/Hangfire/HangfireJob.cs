@@ -64,7 +64,7 @@ namespace Archimedes.Service.Candle
                 _logger.LogInformation("Waiting 3 secs to start background Job");
                 Thread.Sleep(3000);
 
-                BackgroundJob.Enqueue(() => _price.SendRequest());
+                BackgroundJob.Enqueue(() => _price.SendRequestAsync("0Min"));
 
                 // this are run as soon as the systme is up and running
                 BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("1D"));

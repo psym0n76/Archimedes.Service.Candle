@@ -1,30 +1,26 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Archimedes.Library.Domain;
 using Archimedes.Library.Message;
 using Archimedes.Library.Message.Dto;
 using Archimedes.Library.RabbitMq;
 using Archimedes.Service.Candle.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Archimedes.Service.Price
 {
     public class PriceRequestManager : IPriceRequestManager
     {
         private readonly ILogger<PriceRequestManager> _logger;
-        private readonly Config _config;
         private readonly IProducer<PriceMessage> _producer;
         private readonly IMarketClient _markets;
 
         public PriceRequestManager(ILogger<PriceRequestManager> logger, IProducer<PriceMessage> producer,
-            IMarketClient markets, IOptions<Config> config)
+            IMarketClient markets)
         {
             _logger = logger;
             _producer = producer;
             _markets = markets;
-            _config = config.Value;
         }
 
         public async Task SendRequestAsync(string granularity)

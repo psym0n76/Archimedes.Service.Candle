@@ -30,9 +30,6 @@ namespace Archimedes.Service.Candle
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //Required to ensure hangfire is setup
-            Thread.Sleep(10000);
-
             services.Configure<Config>(Configuration.GetSection("AppSettings"));
             services.AddSingleton(Configuration);
             var config = Configuration.GetSection("AppSettings").Get<Config>();

@@ -43,6 +43,7 @@ namespace Archimedes.Service.Candle
 
             services.AddTransient<IPriceRequestManager, PriceRequestManager>();
             services.AddTransient<ICandleRequestManager, CandleRequestManager>();
+
             services.AddLogging();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);

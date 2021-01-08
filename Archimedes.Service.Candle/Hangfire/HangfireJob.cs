@@ -67,9 +67,14 @@ namespace Archimedes.Service.Candle
                 BackgroundJob.Enqueue(() => _price.SendRequestAsync("0Min"));
 
                 // this are run as soon as the systme is up and running
+                BackgroundJob.Enqueue(() => _candle.SendRequestAsync("15Min"));
+                Thread.Sleep(2000);
+                BackgroundJob.Enqueue(() => _candle.SendRequestAsync("5Min"));
+                Thread.Sleep(2000);
                 BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("1D"));
-                BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("15Min"));
+                Thread.Sleep(2000);
                 BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("1H"));
+                Thread.Sleep(2000);
                 BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("4H"));
                 
             }

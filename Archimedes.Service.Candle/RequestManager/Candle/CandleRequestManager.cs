@@ -74,6 +74,12 @@ namespace Archimedes.Service.Candle
                 message.CountCandleIntervals();
                 _producer.PublishMessage(message, "CandleRequestQueue");
                 _logger.LogInformation($"Published to CandleRequestQueue: {message}");
+                
+                if (message.DateRanges.Count > 1)
+                {
+                    _logger.LogInformation($"Published to CandleRequestQueue Waiting 2 secs before sending next: {message}");
+                    Thread.Sleep(2000);
+                }
             }
         }
     }

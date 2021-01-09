@@ -64,7 +64,7 @@ namespace Archimedes.Service.Candle
                 _logger.LogInformation("Waiting 3 secs to start background Job");
                 Thread.Sleep(3000);
 
-                if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+                if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
                 {
                     _logger.LogWarning("Weekend - not running instant requests");
                     return;

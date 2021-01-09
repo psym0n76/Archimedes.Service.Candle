@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Threading;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Hangfire;
 using Archimedes.Library.Message;

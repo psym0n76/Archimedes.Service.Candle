@@ -34,7 +34,7 @@ namespace Archimedes.Service.Candle
                     logging.AddConsole();
                     logging.AddDebug();
                     logging.AddEventLog();
-                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.SetMinimumLevel(LogLevel.Information);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

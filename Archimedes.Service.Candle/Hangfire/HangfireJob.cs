@@ -23,7 +23,7 @@ namespace Archimedes.Service.Candle
         {
             _logger.LogInformation("Job started info: ");
 
-            const string cronMinutely = "0/1 * * * *";
+            const string cronMinutely = "0/1 * * * MON,TUE,WED,THU,FRI";
             const string cronMinutelyFifteenWorking = "0/15 * * * MON,TUE,WED,THU,FRI";
             const string cronMinutelyFiveWorkingWeek = "0/5 * * * MON,TUE,WED,THU,FRI";
             const string cronHourlyOneWorkingWeek = "0 0/1 * * MON,TUE,WED,THU,FRI";
@@ -64,6 +64,12 @@ namespace Archimedes.Service.Candle
                 _logger.LogInformation("Waiting 3 secs to start background Job");
                 Thread.Sleep(3000);
 
+                if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    _logger.LogWarning("Weekend - not running instant requests");
+                    return;
+                }
+                
                 BackgroundJob.Enqueue(() => _price.SendRequestAsync("0Min"));
 
                 // this are run as soon as the systme is up and running

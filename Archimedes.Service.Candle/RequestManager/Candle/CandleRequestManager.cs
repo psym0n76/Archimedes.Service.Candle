@@ -80,6 +80,8 @@ namespace Archimedes.Service.Candle
                     _logger.LogInformation($"Published to CandleRequestQueue Waiting 2 secs before sending next: {message}");
                     Thread.Sleep(2000);
                 }
+                
+                
             }
         }
     }

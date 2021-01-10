@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Archimedes.Library.Logger;
 using Archimedes.Service.Price;
 using Hangfire;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,8 @@ namespace Archimedes.Service.Candle
         private readonly ILogger<HangfireJob> _logger;
         private readonly ICandleRequestManager _candle;
         private readonly IPriceRequestManager _price;
+        private readonly BatchLog _batchLog = new BatchLog();
+        private string _logId;
 
         public HangfireJob(ILogger<HangfireJob> log, ICandleRequestManager candle, IPriceRequestManager price)
         {
@@ -21,7 +24,8 @@ namespace Archimedes.Service.Candle
 
         public void RunJob()
         {
-            _logger.LogInformation("Job started info: ");
+            _logId = _batchLog.Start();
+            _batchLog.Update(_logId,"Job started info");
 
             const string cronMinutely = "0/1 * * * MON,TUE,WED,THU,FRI";
             const string cronMinutelyFifteenWorking = "0/15 * * * MON,TUE,WED,THU,FRI";
@@ -61,15 +65,17 @@ namespace Archimedes.Service.Candle
                     cronDailyWorkingWeek);
 
 
-                _logger.LogInformation("Waiting 3 secs to start background Job");
+
+                _batchLog.Update(_logId, "Waiting 3 secs to start background Job");
+                
                 Thread.Sleep(3000);
 
                 if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
                 {
-                    _logger.LogWarning("Weekend - not running instant requests");
+                    _logger.LogWarning(_batchLog.Print(_logId, "Weekend - not running instant requests"));
                     return;
                 }
-                
+
                 BackgroundJob.Enqueue(() => _price.SendRequestAsync("0Min"));
 
                 // this are run as soon as the systme is up and running
@@ -77,16 +83,16 @@ namespace Archimedes.Service.Candle
                 Thread.Sleep(2000);
                 BackgroundJob.Enqueue(() => _candle.SendRequestAsync("5Min"));
                 Thread.Sleep(2000);
-                BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("1D"));
+                BackgroundJob.Enqueue(() => _candle.SendRequestAsync("1D"));
                 Thread.Sleep(2000);
-                BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("1H"));
+                BackgroundJob.Enqueue(() => _candle.SendRequestAsync("1H"));
                 Thread.Sleep(2000);
-                BackgroundJob.Enqueue(()=> _candle.SendRequestAsync("4H"));
-                
+                BackgroundJob.Enqueue(() => _candle.SendRequestAsync("4H"));
+
             }
             catch (Exception e)
             {
-                _logger.LogError($"Critical Error {e.Message} {e.StackTrace}");
+                _logger.LogError(_batchLog.Print(_logId, $"Error returned from HangfireJob", e));
             }
         }
     }

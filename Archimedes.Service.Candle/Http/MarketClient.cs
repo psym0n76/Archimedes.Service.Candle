@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Extensions;
+using Archimedes.Library.Logger;
 using Archimedes.Library.Message.Dto;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,6 +16,8 @@ namespace Archimedes.Service.Candle.Http
     {
         private readonly HttpClient _client;
         private readonly ILogger<MarketClient> _logger;
+        private readonly BatchLog _batchLog = new BatchLog();
+        private string _logId;
 
         public MarketClient(HttpClient httpClient, IOptions<Config> config, ILogger<MarketClient> logger)
         {
@@ -24,21 +27,38 @@ namespace Archimedes.Service.Candle.Http
             _logger = logger;
         }
 
-        public async Task<IList<MarketDto>> GetMarketAsync(CancellationToken ct = default)
+        public async Task<List<MarketDto>> GetMarketAsync(CancellationToken ct = default)
         {
-            var response = await _client.GetAsync($"market", ct);
 
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var markets = await response.Content.ReadAsAsync<IList<MarketDto>>();
+                _logId = _batchLog.Start();
+                _batchLog.Update(_logId, "GET GetMarketAsync");
+                
+                var response = await _client.GetAsync($"market", ct);
 
-               _logger.LogInformation($"Received {markets.Count} Market records");
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.RequestMessage != null)
+
+                        _logger.LogWarning(
+                            _batchLog.Print(_logId,
+                                $"GET Failed: {response.ReasonPhrase} from {response.RequestMessage.RequestUri}"));
+
+                    return new List<MarketDto>();
+                }
+
+                var markets = await response.Content.ReadAsAsync<List<MarketDto>>();
+                _logger.LogInformation(_batchLog.Print(_logId, $"Returned {markets.Count} Market(s)"));
 
                 return markets;
-            }
 
-            _logger.LogWarning($"Failed to Get {response.ReasonPhrase} from {_client.BaseAddress}/market");
-            return Array.Empty<MarketDto>();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_batchLog.Print(_logId, $"Error returned from MessageClient", e));
+                return new List<MarketDto>();
+            }
         }
     }
 }

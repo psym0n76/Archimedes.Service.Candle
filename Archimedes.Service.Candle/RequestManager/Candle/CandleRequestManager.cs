@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Domain;
 using Archimedes.Library.Extensions;
+using Archimedes.Library.Logger;
 using Archimedes.Library.Message;
 using Archimedes.Service.Candle.Http;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,8 @@ namespace Archimedes.Service.Candle
         private readonly ILogger<CandleRequestManager> _logger;
         private readonly IMarketClient _markets;
         private readonly IProducer<CandleMessage> _producer;
+        private readonly BatchLog _batchLog = new BatchLog();
+        private string _logId;
 
         public CandleRequestManager(IOptions<Config> config, ILogger<CandleRequestManager> logger, IMarketClient markets, IProducer<CandleMessage> producer)
         {
@@ -31,11 +34,13 @@ namespace Archimedes.Service.Candle
 
         public async Task SendRequestAsync(string granularity)
         {
+            _logId = _batchLog.Start();
+            
             var markets = await  _markets.GetMarketAsync(new CancellationToken());
 
-            if (markets == null || !markets.Any())
+            if (!markets.Any())
             {
-                _logger.LogWarning($"Markets not FOUND");
+                _logger.LogWarning(_batchLog.Print(_logId,$"Markets not FOUND"));
                 return;
             }
 
@@ -46,11 +51,15 @@ namespace Archimedes.Service.Candle
                     SendToQueue(market);
                 }
             }
+
+            _logger.LogInformation(_batchLog.Print(_logId));
         }
         private void SendToQueue(MarketDto market)
         {
             var timeInterval = market.TimeFrame == "Min" ? market.BrokerTimeMinInterval : market.BrokerTimeInterval;
 
+            _batchLog.Update(_logId,$"Publish {market.Name} {market.Granularity}");
+            
             var message = new CandleMessage
             {
                 StartDate = market.MaxDate,
@@ -61,7 +70,8 @@ namespace Archimedes.Service.Candle
                 Interval = market.Interval,
                 MaxIntervals = _config.MaxIntervalCandles,
                 MarketId = market.Id,
-                ElapsedTime = DateTime.Now
+                ElapsedTime = DateTime.Now,
+                ExternalMarketId = market.ExternalMarketId
             };
 
             message.CountCandleIntervals();
@@ -73,15 +83,14 @@ namespace Archimedes.Service.Candle
                 message.EndDate = range.EndDate;
                 message.CountCandleIntervals();
                 _producer.PublishMessage(message, "CandleRequestQueue");
-                _logger.LogInformation($"Published to CandleRequestQueue: {message}");
                 
+                _batchLog.Update(_logId, $"Published to CandleRequestQueue: {message.Market} {message.TimeFrame} {message.StartDate} {message.EndDate}");
+
                 if (message.DateRanges.Count > 1)
                 {
-                    _logger.LogInformation($"Published to CandleRequestQueue Waiting 2 secs before sending next: {message}");
+                    _batchLog.Update(_logId, $"Published to CandleRequestQueue: Waiting 2 secs before sending next: {message.DateRanges.Count}");
                     Thread.Sleep(2000);
                 }
-                
-                
             }
         }
     }

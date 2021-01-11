@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -14,11 +15,15 @@ namespace Archimedes.Service.Candle
             try
             {
                 logger.Info("Initialise Main");
+                logger.Info("Initialise Main - Pausing to waiting 10 Sec(s) for HangFire DB to be setup");
+                Thread.Sleep(10000);
                 CreateWebHostBuilder(args).Build().Run();
             }
             catch (Exception e)
             {
-                logger.Error(e, "Stopped program because of exception");
+                logger.Error("Stopped program because of exception");
+                logger.Error(e.Message);
+                logger.Error($"\n\n{e.StackTrace}");
             }
             finally
             {

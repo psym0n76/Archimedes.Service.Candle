@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Archimedes.Library.Logger;
 using Archimedes.Service.Price;
 using Hangfire;
@@ -67,8 +68,9 @@ namespace Archimedes.Service.Candle
 
 
                 _batchLog.Update(_logId, "Waiting 3 secs to start background Job");
-                
-                Thread.Sleep(5000);
+
+                Task.Delay(5000);
+                //Thread.Sleep(5000);
 
                 if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
                 {
@@ -82,23 +84,23 @@ namespace Archimedes.Service.Candle
                 BackgroundJob.Enqueue(() => _candle.SendRequestAsync("15Min"));
                 _batchLog.Update(_logId, "Starting 15Min Job");
 
-                
-                Thread.Sleep(5000);
+                Task.Delay(5000);
+                //Thread.Sleep(5000);
                 BackgroundJob.Enqueue(() => _candle.SendRequestAsync("5Min"));
                 _batchLog.Update(_logId, "Starting 5Min Job");
 
-
-                Thread.Sleep(5000);
+                Task.Delay(5000);
+                //Thread.Sleep(5000);
                 BackgroundJob.Enqueue(() => _candle.SendRequestAsync("1D"));
                 _batchLog.Update(_logId, "Starting 1D Job");
 
-                
-                Thread.Sleep(5000);
+                Task.Delay(5000);
+                //Thread.Sleep(5000);
                 BackgroundJob.Enqueue(() => _candle.SendRequestAsync("1H"));
                 _batchLog.Update(_logId, "Starting 1H Job");
 
-                
-                Thread.Sleep(5000);
+                Task.Delay(5000);
+                //Thread.Sleep(5000);
                 BackgroundJob.Enqueue(() => _candle.SendRequestAsync("4H"));
                 _batchLog.Update(_logId, "Starting 4H Job");
 

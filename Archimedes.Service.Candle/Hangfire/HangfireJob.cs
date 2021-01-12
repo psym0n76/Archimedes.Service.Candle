@@ -47,7 +47,7 @@ namespace Archimedes.Service.Candle
 
                 RecurringJob.AddOrUpdate("Job: 0min Candle Request",
                     () => _price.SendRequestAsync("0Min"),
-                    cronMinutely);
+                    cronMinutelyFiveWorkingWeek);
 
                 RecurringJob.RemoveIfExists("Job: 5min Candle Request");
                 RecurringJob.AddOrUpdate("Job: 5min Candle Request",

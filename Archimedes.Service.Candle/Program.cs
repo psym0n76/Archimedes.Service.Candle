@@ -16,7 +16,7 @@ namespace Archimedes.Service.Candle
             {
                 logger.Info("Initialise Main");
                 logger.Info("Initialise Main - Pausing to waiting 30 Sec(s) for HangFire DB to be setup");
-                Thread.Sleep(30000);
+                //Thread.Sleep(30000);
                 CreateWebHostBuilder(args).Build().Run();
             }
             catch (Exception e)

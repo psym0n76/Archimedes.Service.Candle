@@ -29,7 +29,6 @@ namespace Archimedes.Service.Candle.Http
 
         public async Task<List<MarketDto>> GetMarketAsync(CancellationToken ct = default)
         {
-
             try
             {
                 _logId = _batchLog.Start();

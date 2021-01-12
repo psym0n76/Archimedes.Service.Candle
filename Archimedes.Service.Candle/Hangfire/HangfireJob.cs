@@ -109,22 +109,22 @@ namespace Archimedes.Service.Candle
 
             _candle.SendRequestAsync("15Min");
             _batchLog.Update(_logId, "Starting 15Min Job");
-            Thread.Sleep(5000);
+            Thread.Sleep(500);
 
 
             _candle.SendRequestAsync("5Min");
             _batchLog.Update(_logId, "Starting 5Min Job");
-            Thread.Sleep(5000);
+            Thread.Sleep(500);
 
 
             _candle.SendRequestAsync("1D");
             _batchLog.Update(_logId, "Starting 1D Job");
-            Thread.Sleep(5000);
+            Thread.Sleep(500);
 
 
             _candle.SendRequestAsync("1H");
             _batchLog.Update(_logId, "Starting 1H Job");
-            Thread.Sleep(5000);
+            Thread.Sleep(500);
 
 
             _candle.SendRequestAsync("4H");

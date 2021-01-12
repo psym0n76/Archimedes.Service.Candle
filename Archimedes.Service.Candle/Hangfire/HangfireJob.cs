@@ -40,8 +40,13 @@ namespace Archimedes.Service.Candle
                 // https://github.com/HangfireIO/Hangfire/issues/1365 cron running from a set time 
 
                 RecurringJob.RemoveIfExists("Job: 1min Candle Request");
+                
                 RecurringJob.AddOrUpdate("Job: 1min Candle Request",
                     () => _candle.SendRequestAsync("1Min"),
+                    cronMinutely);
+
+                RecurringJob.AddOrUpdate("Job: 0min Candle Request",
+                    () => _price.SendRequestAsync("0Min"),
                     cronMinutely);
 
                 RecurringJob.RemoveIfExists("Job: 5min Candle Request");
@@ -74,13 +79,13 @@ namespace Archimedes.Service.Candle
 
                 if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
                 {
-                    _logger.LogWarning(_batchLog.Print(_logId, "Weekend - not running instant requests"));
+                    _logger.LogWarning(_batchLog.Print(_logId, $"WARNING WEEKEND {DateTime.Now.DayOfWeek} NOT running instant requests"));
                     return;
                 }
 
-                BackgroundJob.Enqueue(() => _price.SendRequestAsync("0Min"));
+                //BackgroundJob.Enqueue(() => _price.SendRequestAsync("0Min"));
 
-                // this are run as soon as the systme is up and running
+                // this are run as soon as the system is up and running
                 BackgroundJob.Enqueue(() => _candle.SendRequestAsync("15Min"));
                 _batchLog.Update(_logId, "Starting 15Min Job");
 

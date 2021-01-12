@@ -41,7 +41,7 @@ namespace Archimedes.Service.Candle
             services.AddTransient<IProducer<PriceMessage>>(x => new Producer<PriceMessage>(config.RabbitHost, config.RabbitPort,config.RabbitExchange));
 
             services.AddTransient<IPriceRequestManager, PriceRequestManager>();
-            services.AddTransient<ICandleRequestManager, CandleRequestManager>();
+            services.AddSingleton<ICandleRequestManager, CandleRequestManager>();
 
             services.AddLogging();
 

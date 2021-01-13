@@ -14,12 +14,12 @@ namespace Archimedes.Service.Candle
         private readonly IPriceRequestManager _price;
         private readonly BatchLog _batchLog = new BatchLog();
         private string _logId;
-        const string CronMinutely = "0/1 * * * MON,TUE,WED,THU,FRI";
-        const string CronMinutelyFifteenWorking = "0/15 * * * MON,TUE,WED,THU,FRI";
-        const string CronMinutelyFiveWorkingWeek = "0/5 * * * MON,TUE,WED,THU,FRI";
-        const string CronHourlyOneWorkingWeek = "0 0/1 * * MON,TUE,WED,THU,FRI";
-        const string CronHourlyFourWorkingWeek = "0 0/4 * * MON,TUE,WED,THU,FRI";
-        const string CronDailyWorkingWeek = "0 0 ? * MON,TUE,WED,THU,FRI";
+        private const string CronMinutely = "0/1 * * * MON,TUE,WED,THU,FRI";
+        private const string CronMinutelyFifteenWorking = "0/15 * * * MON,TUE,WED,THU,FRI";
+        private const string CronMinutelyFiveWorkingWeek = "0/5 * * * MON,TUE,WED,THU,FRI";
+        private const string CronHourlyOneWorkingWeek = "0 0/1 * * MON,TUE,WED,THU,FRI";
+        private const string CronHourlyFourWorkingWeek = "0 0/4 * * MON,TUE,WED,THU,FRI";
+        private const string CronDailyWorkingWeek = "0 0 ? * MON,TUE,WED,THU,FRI";
 
         public HangfireJob(ILogger<HangfireJob> log, ICandleRequestManager candle, IPriceRequestManager price)
         {
@@ -109,22 +109,22 @@ namespace Archimedes.Service.Candle
 
             _candle.SendRequestAsync("15Min");
             _batchLog.Update(_logId, "Starting 15Min Job");
-            //Thread.Sleep(50);
+            Thread.Sleep(5);
 
 
             _candle.SendRequestAsync("5Min");
             _batchLog.Update(_logId, "Starting 5Min Job");
-            //Thread.Sleep(50);
+            Thread.Sleep(5);
 
 
             _candle.SendRequestAsync("1D");
             _batchLog.Update(_logId, "Starting 1D Job");
-            //Thread.Sleep(50);
+            Thread.Sleep(5);
 
 
             _candle.SendRequestAsync("1H");
             _batchLog.Update(_logId, "Starting 1H Job");
-           //Thread.Sleep(50);
+           Thread.Sleep(5);
 
 
             _candle.SendRequestAsync("4H");

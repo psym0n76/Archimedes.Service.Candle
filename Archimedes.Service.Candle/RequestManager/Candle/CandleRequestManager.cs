@@ -35,13 +35,13 @@ namespace Archimedes.Service.Candle
 
         public async Task SendRequestAsync(string granularity)
         {
-            _logId = _batchLog.Start();
+            _logId = _batchLog.Start(Thread.CurrentThread.ManagedThreadId.ToString());
 
             var markets = await _markets.GetMarketAsync(new CancellationToken());
 
             if (!markets.Any())
             {
-                _logger.LogWarning(_batchLog.Print(_logId, $"Markets not FOUND"));
+                _logger.LogWarning(_batchLog.Print($"{_logId}{Thread.CurrentThread.ManagedThreadId}", $"Markets not FOUND"));
                 return;
             }
 
@@ -53,14 +53,14 @@ namespace Archimedes.Service.Candle
                 }
             }
 
-            _logger.LogInformation(_batchLog.Print(_logId));
+            _logger.LogInformation(_batchLog.Print($"{_logId}{Thread.CurrentThread.ManagedThreadId}"));
         }
 
         private void SendToQueue(MarketDto market)
         {
             var timeInterval = market.TimeFrame == "Min" ? market.BrokerTimeMinInterval : market.BrokerTimeInterval;
 
-            _batchLog.Update(_logId, $"Publish {market.Name} {market.Granularity}");
+            _batchLog.Update($"{_logId}{Thread.CurrentThread.ManagedThreadId}", $"Publish {market.Name} {market.Granularity}");
 
             var message = new CandleMessage
             {
@@ -86,7 +86,7 @@ namespace Archimedes.Service.Candle
 
                 if (message.StartDate > message.EndDate)
                 {
-                    _batchLog.Update(_logId,
+                    _batchLog.Update($"{_logId}{Thread.CurrentThread.ManagedThreadId}",
                         $"Published to CandleRequestQueue: WARNING Start > End {message.StartDate} {message.EndDate}");
                     break;
                 }
@@ -94,12 +94,12 @@ namespace Archimedes.Service.Candle
                 message.CountCandleIntervals();
                 _producer.PublishMessage(message, "CandleRequestQueue");
 
-                _batchLog.Update(_logId,
+                _batchLog.Update($"{_logId}{Thread.CurrentThread.ManagedThreadId}",
                     $"Published to CandleRequestQueue: {message.Market} {message.TimeFrame} {message.StartDate} {message.EndDate}");
 
                 if (message.DateRanges.Count > 1)
                 {
-                    _batchLog.Update(_logId,
+                    _batchLog.Update($"{_logId}{Thread.CurrentThread.ManagedThreadId}",
                         $"Published to CandleRequestQueue: Waiting 1 secs before sending next: {message.DateRanges.Count}");
                     Thread.Sleep(1000);
                 }

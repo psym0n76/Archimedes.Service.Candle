@@ -105,7 +105,6 @@ namespace Archimedes.Service.Candle
                     $"WARNING WEEKEND {DateTime.Now.DayOfWeek} NOT running instant requests"));
                 return;
             }
-            //BackgroundJob.Enqueue(() => _price.SendRequestAsync("0Min"));
 
             _candle.SendRequestAsync("15Min");
             _batchLog.Update(_logId, "Starting 15Min Job");

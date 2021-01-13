@@ -35,13 +35,26 @@ namespace Archimedes.Service.Candle
 
         public async Task SendRequestAsync(string granularity)
         {
-            _logId = _batchLog.Start(Thread.CurrentThread.ManagedThreadId.ToString());
+            try
+            {
+                _logId = _batchLog.Start();
+                await SendRequest(granularity);
+                _logger.LogInformation(_batchLog.Print(_logId));
 
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_batchLog.Print($"{_logId}","Error returned from CandleRequestManager",e));
+            }
+        }
+
+        private async Task SendRequest(string granularity)
+        {
             var markets = await _markets.GetMarketAsync(new CancellationToken());
 
             if (!markets.Any())
             {
-                _logger.LogWarning(_batchLog.Print($"{_logId}{Thread.CurrentThread.ManagedThreadId}", $"Markets not FOUND"));
+                _logger.LogWarning(_batchLog.Print(_logId, $"Markets not FOUND"));
                 return;
             }
 
@@ -52,15 +65,13 @@ namespace Archimedes.Service.Candle
                     SendToQueue(market);
                 }
             }
-
-            _logger.LogInformation(_batchLog.Print($"{_logId}{Thread.CurrentThread.ManagedThreadId}"));
         }
 
         private void SendToQueue(MarketDto market)
         {
             var timeInterval = market.TimeFrame == "Min" ? market.BrokerTimeMinInterval : market.BrokerTimeInterval;
 
-            _batchLog.Update($"{_logId}{Thread.CurrentThread.ManagedThreadId}", $"Publish {market.Name} {market.Granularity}");
+            _batchLog.Update(_logId, $"Publish {market.Name} {market.Granularity}");
 
             var message = new CandleMessage
             {
@@ -86,21 +97,18 @@ namespace Archimedes.Service.Candle
 
                 if (message.StartDate > message.EndDate)
                 {
-                    _batchLog.Update($"{_logId}{Thread.CurrentThread.ManagedThreadId}",
-                        $"Published to CandleRequestQueue: WARNING Start > End {message.StartDate} {message.EndDate}");
+                    _batchLog.Update(_logId, $"Published to CandleRequestQueue: WARNING Start > End {message.StartDate} {message.EndDate}");
                     break;
                 }
 
                 message.CountCandleIntervals();
                 _producer.PublishMessage(message, "CandleRequestQueue");
 
-                _batchLog.Update($"{_logId}{Thread.CurrentThread.ManagedThreadId}",
-                    $"Published to CandleRequestQueue: {message.Market} {message.TimeFrame} {message.StartDate} {message.EndDate}");
+                _batchLog.Update(_logId, $"Published to CandleRequestQueue: {message.Market} {message.TimeFrame} {message.StartDate} {message.EndDate}");
 
                 if (message.DateRanges.Count > 1)
                 {
-                    _batchLog.Update($"{_logId}{Thread.CurrentThread.ManagedThreadId}",
-                        $"Published to CandleRequestQueue: Waiting 1 secs before sending next: {message.DateRanges.Count}");
+                    _batchLog.Update(_logId, $"Published to CandleRequestQueue: Waiting 1 secs before sending next: {message.DateRanges.Count}");
                     Thread.Sleep(1000);
                 }
             }

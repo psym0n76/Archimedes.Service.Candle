@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Archimedes.Library.Logger;
@@ -54,6 +55,7 @@ namespace Archimedes.Service.Price
         {
             var request = new PriceMessage()
             {
+                Id = Guid.NewGuid().ToString(),
                 Market = market.Name
             };
 

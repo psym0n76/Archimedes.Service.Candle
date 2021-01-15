@@ -59,7 +59,7 @@ namespace Archimedes.Service.Price
                 Market = market.Name
             };
 
-            _producer.PublishMessage(request, "PriceRequestQueue");
+            _producer.PublishMessage(request, "PriceRequestQueue","5000");
             _batchLog.Update(_logId,$"Published to PriceRequestQueue");
         }
     }

@@ -103,7 +103,7 @@ namespace Archimedes.Service.Candle
                 }
 
                 message.CountCandleIntervals();
-                _producer.PublishMessage(message, "CandleRequestQueue");
+                _producer.PublishMessage(message, "CandleRequestQueue", "5000");
 
                 _batchLog.Update(_logId, $"Published to CandleRequestQueue: {message.Market} {message.TimeFrame} {message.StartDate} {message.EndDate}");
 

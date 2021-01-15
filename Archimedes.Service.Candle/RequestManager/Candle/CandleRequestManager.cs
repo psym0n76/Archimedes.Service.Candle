@@ -75,6 +75,7 @@ namespace Archimedes.Service.Candle
 
             var message = new CandleMessage
             {
+                Id = Guid.NewGuid().ToString(),
                 StartDate = market.MaxDate,
                 EndDate = DateTime.Now.RoundDownTime(market.Interval.ToMinutes(market.TimeFrame)),
                 Market = market.Name,

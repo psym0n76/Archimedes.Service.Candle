@@ -91,6 +91,7 @@ namespace Archimedes.Service.Candle
             message.CountCandleIntervals();
             message.CalculateDateRanges();
 
+            var counter = 1;
             foreach (var range in message.DateRanges)
             {
                 message.StartDate = range.StartDate;
@@ -109,9 +110,11 @@ namespace Archimedes.Service.Candle
 
                 if (message.DateRanges.Count > 1)
                 {
-                    _batchLog.Update(_logId, $"Published to CandleRequestQueue: Waiting 1 secs before sending next: {message.DateRanges.Count}");
+                    _batchLog.Update(_logId, $"Bulk request - waiting 1 sec(s) before sending next request: {counter} of {message.DateRanges.Count}");
                     Thread.Sleep(1000);
                 }
+
+                counter++;
             }
         }
     }
